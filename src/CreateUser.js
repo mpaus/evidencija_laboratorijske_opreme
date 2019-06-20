@@ -20,30 +20,9 @@ import TableRow from "./Korisnici";
 import {Query, Mutation} from "react-apollo";
 import { withApollo } from 'react-apollo'
 import AuthContext from './context/authContext';
-
-const SMJER_QUERY = gql`
-    query SmjerQuery {
-          smjer {
-            id
-            nazivSmjera
-        }
-    }
-`
-;
-
-const CREATE_USER = gql`
-    mutation CreateUser($input: KorisnikInput!, $file: Upload){
-        CreateUser(input: $input, file: $file){
-            email
-            lozinka
-            maticniBroj
-            ime
-            prezime
-            brojTelefona
-            ulogaId
-          }
-    }
-`;
+import TableCell from "@material-ui/core/TableCell";
+import { ULOGA_KORISNIKA } from './apollo/queries';
+import { CREATE_USER } from './apollo/mutations';
 
 const styles = theme => ({
     appBar: {
@@ -94,12 +73,8 @@ class CreateUser extends React.Component {
         ime: '',
         prezime: '',
         brojTelefona: '',
-        ulogaId: 1,
+        ulogaId: null,
         slika: null
-    };
-
-    handleSubmit = () => {
-      console.log(this.state);
     };
 
     update = async (data1, data2, data3) => {
@@ -149,6 +124,8 @@ class CreateUser extends React.Component {
         })
     };
 
+    handleUlogaChange = (e, value) => this.setState({ ulogaId: value });
+
     render() {
     const { classes } = this.props;
     console.log(this);
@@ -173,9 +150,24 @@ return (
                                     <FormLabel>Vrsta korisnika</FormLabel>
                                     <RadioGroup
                                         name="vrstaKorisnika"
+                                        onChange={this.handleUlogaChange}
                                     >
-                                        <FormControlLabel value="student" control={<Radio/>} label="Student"/>
-                                        <FormControlLabel value="profesor" control={<Radio/>} label="Profesor"/>
+                                        <Query query={ULOGA_KORISNIKA}>
+                                            {
+                                                ({loading, error, data}) => {
+                                                    if(loading) return <h4>Loading</h4>;
+                                                    if(error) console.log(error);
+                                                    console.log(data);
+                                                    const radioButtons = [];
+
+                                                    data && data.uloga && data.uloga.forEach((uloga) => {
+                                                        radioButtons.push(<FormControlLabel value={uloga.id} control={<Radio/>} label={uloga.nazivUloge}/>)
+                                                    });
+
+                                                    return radioButtons;
+                                                }
+                                            }
+                                        </Query>
                                     </RadioGroup>
                                 </FormControl>
                                 <Grid container spacing={24}>
@@ -291,7 +283,6 @@ return (
                                 </Grid>
                             </FormGroup>
                         </form>
-                            {console.log(this.state.slika, 'SLIKA')}
                         <Button
                         color="primary"
                         variant="raised"

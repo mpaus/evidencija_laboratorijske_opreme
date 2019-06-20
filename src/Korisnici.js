@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import gql from 'graphql-tag';
 import Card from '@material-ui/core/Card';
 import {Query} from 'react-apollo';
 import Table from '@material-ui/core/Table';
@@ -12,22 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Dialog from '@material-ui/core/Dialog';
 import Korisnik from './Korisnik';
-
-const KORISNIK_QUERY = gql`
-    query KorisnikQuery {
-          korisnik {
-            id
-            maticniBroj
-            ime
-            prezime
-            uloga {
-              id
-              nazivUloge
-            }
-        }
-    }
-`
-;
+import { KORISNIK_QUERY } from './apollo/queries';
 
 export class Korisnici extends Component {
 
