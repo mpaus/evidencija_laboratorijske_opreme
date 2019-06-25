@@ -12,6 +12,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Dialog from '@material-ui/core/Dialog';
 import Korisnik from './Korisnik';
 import { KORISNIK_QUERY } from './apollo/queries';
+import MaterialTable from 'material-table';
 
 export class Korisnici extends Component {
 
@@ -27,39 +28,39 @@ export class Korisnici extends Component {
     render() {
         return (
             <Card>
-                <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Matični broj</TableCell>
-                        <TableCell align="right">Ime i Prezime</TableCell>
-                        <TableCell align="right">Uloga</TableCell>
-                    </TableRow>
-                </TableHead>
-                    <TableBody>
-                        <Query query={KORISNIK_QUERY}>
-                            {
-                                ({loading, error, data}) => {
-                                    if(loading) return <h4>Loading</h4>;
-                                    if(error) console.log(error);
-                                    console.log(data);
-                                    const tableRows = [];
+                <MaterialTable
+                    columns={[
+                        { title: "Matični broj", field: "maticniBroj" },
+                        { title: "Ime i Prezime", field: "imeIPrezime" },
+                        { title: "Uloga", field: "uloga" }
+                    ]}
+                    data={[
+                        { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 }
+                    ]}
+                    title="Demo Title"
+                />
+                <Query query={KORISNIK_QUERY}>
+                    {
+                        ({loading, error, data}) => {
+                            if(loading) return <h4>Loading</h4>;
+                            if(error) console.log(error);
+                            console.log(data);
+                            const tableRows = [];
 
-                                    data && data.korisnik && data.korisnik.forEach((korisnik) => {
-                                        tableRows.push(<TableRow key={korisnik.id} onClick={() => this.openKorisnikModal(korisnik)}>
-                                            <TableCell component="th" scope="row">
-                                                {korisnik.maticniBroj}
-                                            </TableCell>
-                                            <TableCell align="right">{`${korisnik.ime} ${korisnik.prezime}`}</TableCell>
-                                            <TableCell align="right">{korisnik.uloga && korisnik.uloga.nazivUloge}</TableCell>
-                                        </TableRow>)
-                                    });
+                            data && data.korisnik && data.korisnik.forEach((korisnik) => {
+                                tableRows.push(<TableRow key={korisnik.id} onClick={() => this.openKorisnikModal(korisnik)}>
+                                    <TableCell component="th" scope="row">
+                                        {korisnik.maticniBroj}
+                                    </TableCell>
+                                    <TableCell align="right">{`${korisnik.ime} ${korisnik.prezime}`}</TableCell>
+                                    <TableCell align="right">{korisnik.uloga && korisnik.uloga.nazivUloge}</TableCell>
+                                </TableRow>)
+                            });
 
-                                    return tableRows;
-                                }
-                            }
-                        </Query>
-                    </TableBody>
-                </Table>
+                            return tableRows;
+                        }
+                    }
+                </Query>
                 <Korisnik
                     open={this.state.korisnikDialogOpen}
                     data={this.state.korisnikDialogData}

@@ -21,3 +21,64 @@ export const DELETE_USER = gql`
     }
   }
 `;
+
+export const DELETE_UREDAJ = gql`
+  mutation DeleteUredaj($input: ID!) {
+    DeleteUredaj(input: $input) {
+      id
+    }
+  }
+`;
+
+export const CREATE_KATEGORIJA = gql`
+  mutation CreateKategorija($input: String!) {
+    CreateKategorija(input: $input) {
+      id
+      nazivKategorije
+    }
+  }
+`;
+
+export const CREATE_UREDAJ = gql`
+  mutation CreateUredaj($input: UredajInput!, $file: Upload) {
+    CreateUredaj(input: $input, file: $file) {
+      id
+      nazivUredaja
+      serijskiBroj
+      cijena
+      napomena
+      specifikacije
+      slikaUrl
+      kategorija{
+        id
+        nazivKategorije
+      }
+      stanje{
+        id
+        nazivStanja
+      }
+    }
+  }
+`;
+
+export const UPDATE_UREDAJ = gql`
+  mutation UpdateUredaj($input: UpdateUredajInput!, $file: Upload) {
+    UpdateUredaj(input: $input, file: $file) {
+      id
+      nazivUredaja
+      serijskiBroj
+      cijena
+      napomena
+      specifikacije
+      slikaUrl
+      kategorija{
+        id
+        nazivKategorije
+      }
+      stanje{
+        id
+        nazivStanja
+      }
+    }
+  }
+`;

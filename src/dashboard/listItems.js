@@ -17,7 +17,12 @@ export const MainListItems = withRouter(({ match, history }) => (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Oprema" />
+      <ListItemText
+          primary="Oprema"
+          onClick={() => {
+              console.log(history);
+              history.push(`${match.url}/oprema`) }}
+      />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
@@ -47,7 +52,11 @@ export const MainListItems = withRouter(({ match, history }) => (
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
-      <ListItemText primary="Moji zahtjevi" />
+      <ListItemText primary="Moji zahtjevi"
+                    onClick={() => {
+                        console.log(history);
+                        history.push(`${match.url}/zahtjevi`) }}
+      />
     </ListItem>
   </div>
 ));

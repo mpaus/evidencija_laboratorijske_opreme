@@ -26,3 +26,34 @@ export const ULOGA_KORISNIKA = gql`
     }
 `
 ;
+
+export const UREDAJ_QUERY = gql`
+    query UredajQuery {
+        uredaj{
+            id
+            nazivUredaja
+            cijena
+            napomena
+            specifikacije
+            slikaUrl
+            serijskiBroj
+            kategorija{
+                id
+                nazivKategorije
+            }
+            stanje{
+                id
+                nazivStanja
+            }
+        }
+    }
+`;
+
+export const KATEGORIJA_QUERY = gql`
+    query KategorijaQuery {
+        kategorija{
+            id
+            nazivKategorije
+        }
+    }
+`;

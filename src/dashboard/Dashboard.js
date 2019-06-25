@@ -15,7 +15,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { MainListItems, secondaryListItems } from './listItems';
-import Korisnici from "../Korisnici";
+import Korisnici from '../Korisnici';
+import Oprema from '../Oprema';
 import { Route, withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
@@ -176,9 +177,11 @@ class Dashboard extends React.Component {
               direction="column"
               alignItems="stretch"
               justify="center"
-              style={{ minHeight: '300px' }}
+              style={{ minHeight: '300px', paddingTop: '300px' }}
           >
           <Route path={`${this.props.match.url}/korisnici`} component={Korisnici}/>
+          <Route path={`${this.props.match.url}/oprema`} component={Oprema}/>
+            <Route path={`${this.props.match.url}/zahtjev`} component={Oprema}/>
           </Grid>
         </main>
       </div>

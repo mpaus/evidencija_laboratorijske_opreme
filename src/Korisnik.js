@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import { Mutation } from 'react-apollo';
 import {KORISNIK_QUERY} from './apollo/queries';
 import {DELETE_USER} from './apollo/mutations';
+import Card from "@material-ui/core/Card";
 
 class Korisnik extends React.Component {
 
@@ -25,29 +26,10 @@ class Korisnik extends React.Component {
         };
     }
 
-    updateCacheDelete = (cache, { data : { DeleteUser: { id }}}) => {
-        const { korisnik} = cache.readQuery({ query: KORISNIK_QUERY });
-
-        console.log(id);
-
-        cache.writeQuery({
-            query: KORISNIK_QUERY,
-            data: {
-                korisnik: korisnik.filter(korisnik => korisnik.id !== id)
-            }
-        });
-
-        this.setState({ open: false });
-    };
-
     render(){
         return (
-            <Dialog
-                open={this.state.open}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">{"Informacije o korisniku"}</DialogTitle>
-                <DialogContent>
+            <Card>
+                <div>
                   <Grid container spacing={3}>
                       <Grid item xs={6}>
                           <img src={this.props.data.slikaUrl} width={300} height={350} alt={`${this.props.data.ime} ${this.props.data.prezime}`}/>
@@ -64,20 +46,8 @@ class Korisnik extends React.Component {
                     </DialogContentText>
                     </Grid>
                   </Grid>
-                </DialogContent>
-                <DialogActions>
-                   <Mutation mutation={DELETE_USER} update={this.updateCacheDelete}>
-                       {deleteUser => (
-                    <Button onClick={() => deleteUser({ variables: { input: this.props.data.id }})} color="primary">
-                        Izbriši korisnika
-                    </Button>
-                       )}
-                   </Mutation>
-                    <Button onClick={this.handleAzuriranje} color="primary" autoFocus>
-                        Ažuriraj korisnika
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                </div>
+            </Card>
         )
 
 }
