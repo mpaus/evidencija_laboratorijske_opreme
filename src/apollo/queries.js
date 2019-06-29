@@ -49,11 +49,73 @@ export const UREDAJ_QUERY = gql`
     }
 `;
 
+export const AVAILABLE_UREDAJ_QUERY = gql`
+    query UredajQuery($stanjeId: ID!) {
+        uredaj(stanjeId: $stanjeId){
+            id
+            nazivUredaja
+            cijena
+            napomena
+            specifikacije
+            slikaUrl
+            serijskiBroj
+            kategorija{
+                id
+                nazivKategorije
+            }
+            stanje{
+                id
+                nazivStanja
+            }
+        }
+    }
+`;
+
 export const KATEGORIJA_QUERY = gql`
     query KategorijaQuery {
         kategorija{
             id
             nazivKategorije
         }
+    }
+`;
+
+export const ZAHTJEV_QUERY = gql`
+    query ZahtjevQuery {
+        zahtjevPosudbe{
+        id
+    pocetakPosudbe
+    krajPosudbe
+    napomenaProfesora
+    razlogPosudbe
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    korisnik{
+      id
+      email
+      ime
+      prezime
+      maticniBroj
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    uredaj{
+      id
+      nazivUredaja
+      serijskiBroj
+      cijena
+      specifikacije
+      slikaUrl
+      napomena
+    }
+    }
     }
 `;

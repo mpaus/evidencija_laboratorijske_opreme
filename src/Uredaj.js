@@ -57,6 +57,13 @@ class Uredaj extends React.Component {
                             <DialogContentText>
                                 Napomena: {this.props.data.napomena}
                             </DialogContentText>
+                            <Button
+                                color="primary"
+                                variant="raised"
+                                onClick={() => this.props.zahtjevState(this.props.data, true)}
+                            >
+                                Zatraži uređaj
+                            </Button>
                         </Grid>
                     </Grid>
                 </div>

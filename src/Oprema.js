@@ -2,20 +2,13 @@ import React, {Component} from 'react';
 import Card from '@material-ui/core/Card';
 import Composer from 'react-composer';
 import {Query,Mutation} from 'react-apollo';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Dialog from '@material-ui/core/Dialog';
-import Korisnik from './Korisnik';
-import { UREDAJ_QUERY } from './apollo/queries';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { UREDAJ_QUERY, AVAILABLE_UREDAJ_QUERY } from './apollo/queries';
 import MaterialTable from 'material-table';
 import Uredaj from './Uredaj';
 import UredajInfo from './UredajInfo';
+import CreateZahtjev from './CreateZahtjev';
 import { DELETE_UREDAJ, UPDATE_UREDAJ } from './apollo/mutations';
 
 export class Oprema extends Component {
@@ -25,15 +18,25 @@ export class Oprema extends Component {
 
         this.state = {
             dialogOpen: false,
-            uredajInfo: null
+            uredajInfo: null,
+            createZahtjevDialogOpen: false,
+            prikaz: 'dostupniUredaji'
         };
 
         this.updateUredajInfoState = this.updateUredajInfoState.bind(this);
+        this.updateZahtjevState = this.updateZahtjevState.bind(this);
     }
 
     updateUredajInfoState = (state) => {
         this.setState({
             uredajInfo: state
+        })
+    };
+
+    updateZahtjevState = (state, dialogState) => {
+        this.setState({
+            uredajInfo: state,
+            createZahtjevDialogOpen: dialogState
         })
     };
 
@@ -52,6 +55,7 @@ export class Oprema extends Component {
     };
 
     render() {
+        console.log(this.state.prikaz);
         return (
             <Card>
                 <Composer
@@ -60,7 +64,13 @@ export class Oprema extends Component {
                     ]}
                  >
                 {([deleteUredaj]) => (
-                    <Query query={UREDAJ_QUERY}>
+                    <React.Fragment>
+                    <Tabs value={this.state.prikaz} onChange={(e, value) => this.setState({ prikaz: value })}>
+                        <Tab value="dostupniUredaji" label="Dostupni uređaji" wrapped />
+                        <Tab value="sviUredaji" label="Svi uređaji" />
+                    </Tabs>
+                        {this.state.prikaz === 'sviUredaji' ?
+                            (<Query query={UREDAJ_QUERY}>
                         {
                             ({loading, error, data}) => {
                                 if (loading) return <h4>Loading</h4>;
@@ -90,6 +100,7 @@ export class Oprema extends Component {
                                         return (
                                             <Uredaj
                                                 data={odabraniUredaj[0]}
+                                                zahtjevState={this.updateZahtjevState}
                                             >
                                             </Uredaj>
                                         )
@@ -130,12 +141,89 @@ export class Oprema extends Component {
                             }
                         }
                     </Query>)
+                            :
+                            (<Query query={AVAILABLE_UREDAJ_QUERY} variables={{ stanjeId: 1 }}>
+                                {
+                                    ({loading, error, data}) => {
+                                        if (loading) return <h4>Loading</h4>;
+                                        if (error) console.log(error);
+                                        console.log(data);
+                                        const tableRows = [];
+                                        data && data.uredaj && data.uredaj.forEach((uredaj) => {
+                                            console.log(uredaj, 'ERROR');
+                                            tableRows.push({
+                                                serijskiBroj: uredaj.serijskiBroj,
+                                                nazivUredaja: uredaj.nazivUredaja,
+                                                kategorija: uredaj.kategorija && uredaj.kategorija.nazivKategorije,
+                                                stanje: uredaj.stanje && uredaj.stanje.nazivStanja
+                                            })
+                                        });
+                                        return (<MaterialTable
+                                            columns={[
+                                                {title: "Serijski broj", field: "serijskiBroj"},
+                                                {title: "Naziv uređaja", field: "nazivUredaja"},
+                                                {title: "Kategorija", field: "kategorija"},
+                                                {title: "Stanje", field: "stanje"}
+                                            ]}
+                                            data={tableRows}
+                                            title="Oprema"
+                                            detailPanel={rowData => {
+                                                const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
+                                                return (
+                                                    <Uredaj
+                                                        data={odabraniUredaj[0]}
+                                                        zahtjevState={this.updateZahtjevState}
+                                                    >
+                                                    </Uredaj>
+                                                )
+                                            }}
+                                            actions={[
+                                                {
+                                                    icon: 'create',
+                                                    tooltip: 'Izmjeni uređaj',
+                                                    onClick: (event, rowData) => {
+                                                        const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
+                                                        return this.setState({ dialogOpen: true, uredajInfo: odabraniUredaj[0] })
+                                                    }
+                                                },
+                                                {
+                                                    icon: 'delete',
+                                                    tooltip: 'Izbriši uređaj',
+                                                    onClick: (event, rowData) => {
+                                                        const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
+                                                        return deleteUredaj({
+                                                            variables: {
+                                                                input: odabraniUredaj[0].id
+                                                            }
+                                                        })
+                                                    }
+                                                },
+
+                                                {
+                                                    icon: 'add_box',
+                                                    tooltip: 'Dodaj uređaj',
+                                                    isFreeAction: true,
+                                                    onClick: () => this.setState({ dialogOpen: true })
+                                                }
+                                            ]}
+                                            options={{
+                                                actionsColumnIndex: -1
+                                            }}
+                                        />);
+                                    }
+                                }
+                            </Query>)}
+                    </React.Fragment>)
                 }
                 </Composer>
                 <UredajInfo
                     open={this.state.dialogOpen}
                     uredajInfo={this.state.uredajInfo}
                     uredajInfoState={this.updateUredajInfoState}
+                />
+                <CreateZahtjev
+                  open={this.state.createZahtjevDialogOpen}
+                  data={this.state.uredajInfo}
                 />
             </Card>
         )

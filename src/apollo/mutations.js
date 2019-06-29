@@ -61,6 +61,35 @@ export const CREATE_UREDAJ = gql`
   }
 `;
 
+export const CREATE_ZAHTJEV = gql`
+  mutation CreateZahtjev($input: ZahtjevInput!) {
+    CreateZahtjev(input: $input) {
+    id
+    pocetakPosudbe
+    krajPosudbe
+    razlogPosudbe
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    korisnik{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    }
+  }
+`;
+
 export const UPDATE_UREDAJ = gql`
   mutation UpdateUredaj($input: UpdateUredajInput!, $file: Upload) {
     UpdateUredaj(input: $input, file: $file) {
@@ -79,6 +108,58 @@ export const UPDATE_UREDAJ = gql`
         id
         nazivStanja
       }
+    }
+  }
+`;
+
+export const APROOVE_ZAHTJEV = gql`
+  mutation AprooveZahtjev($input: AprooveZahtjevInput!) {
+    AprooveZahtjev(input: $input) {
+    id
+    napomenaProfesora
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    }
+  }
+`;
+
+export const DECLINE_ZAHTJEV = gql`
+  mutation DeclineZahtjev($input: DeclineZahtjevInput!) {
+    DeclineZahtjev(input: $input) {
+    id
+    napomenaProfesora
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    }
+  }
+`;
+
+export const RETURN_UREDAJ_ZAHTJEV = gql`
+  mutation ReturnUredajZahtjev($input: ReturnUredajZahtjevInput!) {
+    ReturnUredajZahtjev(input: $input) {
+    id
+    stanje{
+      id
+      nazivStanja
+    }
     }
   }
 `;
