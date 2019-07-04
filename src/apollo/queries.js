@@ -119,3 +119,43 @@ export const ZAHTJEV_QUERY = gql`
     }
     }
 `;
+
+export const SPECIFIC_ZAHTJEV_QUERY = gql`
+    query ZahtjevQuery($stanjeId: ID!) {
+        zahtjevPosudbe(stanjeId: $stanjeId){
+        id
+    pocetakPosudbe
+    krajPosudbe
+    napomenaProfesora
+    razlogPosudbe
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    korisnik{
+      id
+      email
+      ime
+      prezime
+      maticniBroj
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    uredaj{
+      id
+      nazivUredaja
+      serijskiBroj
+      cijena
+      specifikacije
+      slikaUrl
+      napomena
+    }
+    }
+    }
+`;

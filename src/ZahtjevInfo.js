@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import { Mutation } from 'react-apollo';
-import {KORISNIK_QUERY} from './apollo/queries';
+import {KORISNIK_QUERY, SPECIFIC_ZAHTJEV_QUERY, ZAHTJEV_QUERY} from './apollo/queries';
 import {APROOVE_ZAHTJEV, DECLINE_ZAHTJEV, RETURN_UREDAJ_ZAHTJEV } from './apollo/mutations';
 import Card from "@material-ui/core/Card";
 import Composer from "react-composer";
@@ -21,56 +21,53 @@ class ZahtjevInfo extends React.Component {
         super(props);
 
         this.state = {
-            potvrdenZahtjev: false,
             napomenaProfesora: ''
         };
     }
 
     static contextType = AuthContext;
 
-    updateCacheAproove = (cache, result) => {
-        // const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
-        //
-        // console.log(uredaj, CreateUredaj);
-        //
-        // cache.writeQuery({
-        //     query: UREDAJ_QUERY,
-        //     data: {
-        //         uredaj: uredaj.concat(CreateUredaj)
-        //     }
-        // });
-        //
-        // this.setState({ open: false });
+    updateCacheAproove = (cache, {data:{ AprooveZahtjev }}) => {
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 2} });
+
+        console.log(cache, AprooveZahtjev);
+
+        cache.writeQuery({
+            query: SPECIFIC_ZAHTJEV_QUERY,
+            variables: { stanjeId: 2},
+            data: {
+                zahtjevPosudbe: zahtjevPosudbe.filter(zahtjevPosudbe => zahtjevPosudbe.id !== AprooveZahtjev.id)
+            }
+        });
+
     };
 
-    updateCacheDecline = (cache, result) => {
-        // const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
-        //
-        // console.log(uredaj, CreateUredaj);
-        //
-        // cache.writeQuery({
-        //     query: UREDAJ_QUERY,
-        //     data: {
-        //         uredaj: uredaj.concat(CreateUredaj)
-        //     }
-        // });
-        //
-        // this.setState({ open: false });
+    updateCacheDecline = (cache, {data:{ DeclineZahtjev }}) => {
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 2} });
+
+        console.log(cache, DeclineZahtjev);
+
+        cache.writeQuery({
+            query: SPECIFIC_ZAHTJEV_QUERY,
+            variables: { stanjeId: 2},
+            data: {
+                zahtjevPosudbe: zahtjevPosudbe.filter(zahtjevPosudbe => zahtjevPosudbe.id !== DeclineZahtjev.id)
+            }
+        });
     };
 
-    updateCacheReturn = (cache, result) => {
-        // const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
-        //
-        // console.log(uredaj, CreateUredaj);
-        //
-        // cache.writeQuery({
-        //     query: UREDAJ_QUERY,
-        //     data: {
-        //         uredaj: uredaj.concat(CreateUredaj)
-        //     }
-        // });
-        //
-        // this.setState({ open: false });
+    updateCacheReturn = (cache, {data:{ ReturnUredajZahtjev }}) => {
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 3} });
+
+        console.log(cache, ReturnUredajZahtjev);
+
+        cache.writeQuery({
+            query: SPECIFIC_ZAHTJEV_QUERY,
+            variables: { stanjeId: 3},
+            data: {
+                zahtjevPosudbe: zahtjevPosudbe.filter(zahtjevPosudbe => zahtjevPosudbe.id !== ReturnUredajZahtjev.id)
+            }
+        });
     };
 
     handleChange = name => ({ target: element }) => {
@@ -81,7 +78,7 @@ class ZahtjevInfo extends React.Component {
     };
 
     render(){
-        console.log(this.state);
+        console.log(this.props.data.stanje.id);
         return (
             <Card>
                 <div>
@@ -162,29 +159,35 @@ class ZahtjevInfo extends React.Component {
                             >
                                 {([aprooveZahtjev, declineZahtjev, returnUredajZahtjev]) => (
                             <React.Fragment>
-                            <TextField
-                                required
-                                id="napomenaProfesora"
-                                name="napomenaProfesora"
-                                label="Napomena profesora"
-                                fullWidth
-                                onChange={this.handleChange('napomenaProfesora')}
-                            />
+                                {this.props.data.stanje.id === '3' ?
+                                    (<div>
+                                        <FormLabel>
+                                            Napomena profesora: {this.props.data.napomenaProfesora}
+                                        </FormLabel>
+                                    </div>)
+                                    :
+                                    (<TextField
+                                        required
+                                        id="napomenaProfesora"
+                                        name="napomenaProfesora"
+                                        label="Napomena profesora"
+                                        fullWidth
+                                        onChange={this.handleChange('napomenaProfesora')}
+                                    />)}
+
                             <Button
                                 color="primary"
                                 variant="raised"
-                                onClick={() => {
-                                    if(this.state.potvrdenZahtjev) {
-                                        return returnUredajZahtjev({
+                                onClick={() => this.props.data.stanje.id === '3' ?
+                                        returnUredajZahtjev({
                                             variables: {
                                                 input: {
                                                     id: this.props.data.id
                                                 }
                                             }
                                         })
-                                    } else {
-                                        this.setState({ prihvacenUredaj: true });
-                                        return aprooveZahtjev({
+                                        :
+                                        aprooveZahtjev({
                                             variables: {
                                                 input: {
                                                     id: this.props.data.id,
@@ -194,11 +197,10 @@ class ZahtjevInfo extends React.Component {
                                             }
                                         })
                                     }
-                                }}
                             >
-                                {this.state.potvrdenZahtjev ? 'Vrati uređaj' : 'Potvrdi zahtjev'}
+                                {this.props.data.stanje.id === '3' ? 'Vrati uređaj' : 'Potvrdi zahtjev'}
                             </Button>
-                                {!this.state.potvrdenZahtjev && (<Button
+                                {this.props.data.stanje.id !== '3' && this.props.data.stanje.id !== '1' && (<Button
                                 color="primary"
                                 variant="raised"
                                 onClick={() => declineZahtjev({

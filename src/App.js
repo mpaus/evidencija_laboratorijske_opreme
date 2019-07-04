@@ -4,9 +4,10 @@ import { createUploadLink } from 'apollo-upload-client';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { ApolloProvider} from 'react-apollo';
 import Dashboard from './dashboard/Dashboard';
-import SignIn from './SignIn';
-import CreateUser from './CreateUser';
+import SignIn from './login/Prijava';
+import CreateUser from './login/CreateKorisnik';
 import AuthContext from './context/authContext';
+import moment from 'moment';
 
 
 import { ApolloClient } from 'apollo-client';
@@ -31,50 +32,69 @@ const client = new ApolloClient({
 
 });
 
-
-// const client = new ApolloClient({
-//     link : createUploadLink({ uri: 'http://localhost:8000/graphql' })
-// });
-
-
 class App extends Component {
-    state = {
-        token: localStorage.getItem('token') || null,
-        userId: localStorage.getItem( 'userId') || null
-    };
 
-    login = (token, userId, korisnikIme, korisnikPrezime, korisnikUlogaId, tokenExpiration) => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            token: localStorage.getItem('token') || null,
+            korisnikId: localStorage.getItem('korisnikId') || null,
+            korisnikIme: localStorage.getItem('korisnikIme') || null,
+            korisnikPrezime: localStorage.getItem('korisnikPrezime') || null,
+            korisnikUlogaId: localStorage.getItem('korisnikUlogaId') || null,
+            prijavaVrijeme: null,
+            slikaUrl: localStorage.getItem('slikaUrl') || null
+        };
+    }
+
+    login = (token, korisnikId, korisnikIme, korisnikPrezime, korisnikUlogaId, slikaUrl) => {
         localStorage.setItem('token', token);
-        localStorage.setItem('userId', userId);
+        localStorage.setItem('korisnikId', korisnikId);
         localStorage.setItem('korisnikIme', korisnikIme);
-        localStorage.setItem('korisnikPrezime',  korisnikPrezime);
+        localStorage.setItem('korisnikPrezime', korisnikPrezime);
         localStorage.setItem('korisnikUlogaId', korisnikUlogaId);
-        this.setState({ token, userId });
+        localStorage.setItem('slikaUrl', slikaUrl);
+        this.setState({ token, korisnikId, korisnikIme, korisnikPrezime, korisnikUlogaId, slikaUrl, prijavaVrijeme: moment(new Date()) });
     };
 
     logout = () => {
       localStorage.removeItem('token');
-      localStorage.removeItem('userId');
+      localStorage.removeItem('korisnikId');
+        localStorage.removeItem('token');
+        localStorage.removeItem('korisnikId');
         localStorage.removeItem('korisnikIme');
         localStorage.removeItem('korisnikPrezime');
         localStorage.removeItem('korisnikUlogaId');
-      this.setState({ token: null, userId: null });
+        localStorage.removeItem('slikaUrl');
+      this.setState({ token: null, korisnikId: null });
     };
 
     render() {
+        console.log(this.state);
         return (
             <ApolloProvider client={client}>
                 <Router>
-                <AuthContext.Provider value={{ token: this.state.token, userId: this.state.userId, login: this.login, logout: this.logout }}>
+                <AuthContext.Provider value={{
+                    token: this.state.token,
+                    korisnikId: this.state.korisnikId,
+                    korisnikIme: this.state.korisnikIme,
+                    korisnikPrezime: this.state.korisnikPrezime,
+                    korisnikUlogaId: this.state.korisnikUlogaId,
+                    prijavaVrijeme: this.state.prijavaVrijeme,
+                    slikaUrl: this.state.slikaUrl,
+                    login: this.login,
+                    logout: this.logout }}>
                 <div className="container">
                     <Switch>
                         {!this.state.token && <Redirect from="/" to="/auth" exact />}
-                        {this.state.token && <Redirect from="/" to="/dashboard" exact />}
-                        {this.state.token && <Redirect from="/auth" to="/dashboard" exact />}
+                        {this.state.token && <Redirect from="/" to="/dashboard/oprema" exact />}
+                        {this.state.token && <Redirect from="/auth" to="/dashboard/oprema" exact />}
+                        {this.state.token && <Redirect from="/kreirajKorisnika" to="/dashboard" exact />}
+                        {!this.state.token && <Redirect from="/dashboard" to="/auth" />}
                         {!this.state.token && <Route path="/auth" component={SignIn} />}
                         {this.state.token && <Route path="/dashboard" component={Dashboard} />}
                         {!this.state.token && <Route path="/kreirajKorisnika" component={CreateUser} />}
-                        {this.state.token && <Redirect from="/kreirajKorisnika" to="/dashboard" exact />}
                     </Switch>
                     </div>
                 </AuthContext.Provider>

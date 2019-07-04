@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const CREATE_USER = gql`
-    mutation CreateUser($input: KorisnikInput!, $file: Upload){
-        CreateUser(input: $input, file: $file){
+export const CREATE_KORISNIK = gql`
+    mutation CreateKorisnik($input: KorisnikInput!, $file: Upload){
+        CreateKorisnik(input: $input, file: $file){
             email
             lozinka
             maticniBroj

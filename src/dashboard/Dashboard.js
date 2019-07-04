@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,17 +11,16 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { MainListItems, secondaryListItems } from './listItems';
+import { MainListItems } from './listItems';
 import Korisnici from '../Korisnici';
 import Oprema from '../Oprema';
+import Button from '@material-ui/core/Button';
 import Zahtjevi from '../Zahtjevi';
 import { Route, withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-
+import AuthContext from '../context/authContext';
 
 const drawerWidth = 240;
 
@@ -78,15 +78,15 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing.unit * 7,
+    width: theme.spacing(7),
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9,
+      width: theme.spacing(9),
     },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     height: '100vh',
     overflow: 'auto',
   },
@@ -97,14 +97,22 @@ const styles = theme => ({
     height: 320,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
 });
 
 class Dashboard extends React.Component {
-  state = {
-    open: true,
-  };
+
+  static contextType = AuthContext;
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+    };
+
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -115,7 +123,6 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    console.log('tu san');
     const { classes } = this.props;
 
     return (
@@ -146,11 +153,13 @@ class Dashboard extends React.Component {
             >
               Evidencija laboratorijske opreme
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Button
+                className={classes.button}
+                style={{ color: '#fff'}}
+                onClick={() => this.context.logout()}
+            >
+              Odjavi se
+            </Button>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -160,16 +169,19 @@ class Dashboard extends React.Component {
           }}
           open={this.state.open}
         >
-          <div className={classes.toolbarIcon}>
-            <span>{`${localStorage.getItem('korisnikIme')} ${localStorage.getItem('korisnikPrezime')}`}</span>
+          <div className={classes.toolbarIcon} style={{ display: 'flex', justifyContent: 'space-between'}}>
+            {localStorage.getItem('slikaUrl') ?
+                (<Avatar alt="Korisnik" src={localStorage.getItem('slikaUrl')} className={classes.bigAvatar} />)
+                :
+                (<Avatar className={classes.avatar} style={{ backgroundColor: '#3f51b5' }}>{`${localStorage.getItem('korisnikIme').charAt(0)}${localStorage.getItem('korisnikPrezime').charAt(0)}`}</Avatar>)
+            }
+            <span style={{ paddingRight: '10%' }}>{`${localStorage.getItem('korisnikIme')} ${localStorage.getItem('korisnikPrezime')}`}</span>
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
           </div>
           <Divider />
           <List><MainListItems/></List>
-          <Divider />
-          <List>{secondaryListItems}</List>
         </Drawer>
         <main className={classes.content}>
           <Grid
@@ -178,7 +190,7 @@ class Dashboard extends React.Component {
               direction="column"
               alignItems="stretch"
               justify="center"
-              style={{ minHeight: '300px', paddingTop: '300px' }}
+              style={{ paddingTop: '60px' }}
           >
           <Route path={`${this.props.match.url}/korisnici`} component={Korisnici}/>
           <Route path={`${this.props.match.url}/oprema`} component={Oprema}/>
@@ -192,6 +204,7 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withRouter(Dashboard));

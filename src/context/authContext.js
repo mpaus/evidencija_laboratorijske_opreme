@@ -6,6 +6,8 @@ export default React.createContext({
     korisnikIme: null,
     korisnikPrezime: null,
     korisnikUlogaId: null,
+    korisnikSlika: null,
+    prijavaVrijeme: null,
     login: (token, korisnikId, korisnikIme, korisnikPrezime, korisnikUlogaId, tokenExpiration) => {},
     logout: () => {}
 });

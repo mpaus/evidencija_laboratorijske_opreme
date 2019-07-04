@@ -13,13 +13,20 @@ import Dialog from '@material-ui/core/Dialog';
 import Korisnik from './Korisnik';
 import { KORISNIK_QUERY } from './apollo/queries';
 import MaterialTable from 'material-table';
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
 
 export class Korisnici extends Component {
 
-    state = {
-        korisnikDialogOpen: false,
-        korisnikDialogData: {}
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            korisnikDialogOpen: false,
+            korisnikDialogData: {},
+            prikaz: 'studenti'
+        };
+    }
 
     openKorisnikModal = (korisnik) => {
         this.setState({ korisnikDialogOpen: true, korisnikDialogData: korisnik})
@@ -28,17 +35,10 @@ export class Korisnici extends Component {
     render() {
         return (
             <Card>
-                <MaterialTable
-                    columns={[
-                        { title: "Matični broj", field: "maticniBroj" },
-                        { title: "Ime i Prezime", field: "imeIPrezime" },
-                        { title: "Uloga", field: "uloga" }
-                    ]}
-                    data={[
-                        { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 }
-                    ]}
-                    title="Demo Title"
-                />
+                <Tabs value={this.state.prikaz} onChange={(e, value) => this.setState({ prikaz: value })}>
+                    <Tab value="studenti" label="Studenti" wrapped />
+                    <Tab value="profesori" label="Profesori" />
+                </Tabs>
                 <Query query={KORISNIK_QUERY}>
                     {
                         ({loading, error, data}) => {
