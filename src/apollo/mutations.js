@@ -14,9 +14,9 @@ export const CREATE_KORISNIK = gql`
     }
 `;
 
-export const DELETE_USER = gql`
-  mutation DeleteUser($input: ID!) {
-    DeleteUser(input: $input) {
+export const DELETE_KORISNIK = gql`
+  mutation DeleteKorisnik($input: ID!) {
+    DeleteKorisnik(input: $input) {
       id
     }
   }

@@ -16,7 +16,7 @@ import {Query, Mutation} from "react-apollo";
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import AuthContext from '../context/authContext';
-import { ULOGA_KORISNIKA } from '../apollo/queries';
+import {ULOGA_KORISNIKA} from '../apollo/queries';
 import { CREATE_KORISNIK } from '../apollo/mutations';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
@@ -82,12 +82,14 @@ class CreateKorisnik extends React.Component {
         imeError: false,
         prezimeError: false,
         brojTelefonaError: false,
-        ulogaId: 1,
+        ulogaId: '1',
         slika: null,
         showPassword: false
     };
 
     update = async () => {
+
+        await this.props.client.clearStore();
 
         const query = gql`
           query Login($email: String!, $lozinka: String!) {
@@ -98,6 +100,7 @@ class CreateKorisnik extends React.Component {
                   lozinka
                   ime
                   prezime
+                  ulogaId
                   slikaUrl
                   uloga {
                     id
@@ -183,7 +186,7 @@ return (
                                     <RadioGroup
                                         name="vrstaKorisnika"
                                         style={{ flexDirection: 'row' }}
-                                        value="1"
+                                        value={this.state.ulogaId}
                                         onChange={this.handleUlogaChange}
                                     >
                                         <Query query={ULOGA_KORISNIKA}>

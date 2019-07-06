@@ -90,7 +90,7 @@ class App extends Component {
                         {!this.state.token && <Redirect from="/" to="/auth" exact />}
                         {this.state.token && <Redirect from="/" to="/dashboard/oprema" exact />}
                         {this.state.token && <Redirect from="/auth" to="/dashboard/oprema" exact />}
-                        {this.state.token && <Redirect from="/kreirajKorisnika" to="/dashboard" exact />}
+                        {this.state.token && <Redirect from="/kreirajKorisnika" to="/dashboard/oprema" exact />}
                         {!this.state.token && <Redirect from="/dashboard" to="/auth" />}
                         {!this.state.token && <Route path="/auth" component={SignIn} />}
                         {this.state.token && <Route path="/dashboard" component={Dashboard} />}

@@ -9,7 +9,7 @@ import MaterialTable from 'material-table';
 import Uredaj from './Uredaj';
 import UredajInfo from './UredajInfo';
 import CreateZahtjev from './CreateZahtjev';
-import { DELETE_UREDAJ, UPDATE_UREDAJ } from './apollo/mutations';
+import { DELETE_UREDAJ } from './apollo/mutations';
 
 export class Oprema extends Component {
 

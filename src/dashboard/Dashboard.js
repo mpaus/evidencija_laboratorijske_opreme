@@ -7,14 +7,17 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import MoreVertIcon from '@material-ui/icons/MoreVertOutlined';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { MainListItems } from './listItems';
-import Korisnici from '../Korisnici';
+import Korisnici from '../korisnik/Korisnici';
 import Oprema from '../Oprema';
 import Button from '@material-ui/core/Button';
 import Zahtjevi from '../Zahtjevi';
@@ -110,6 +113,8 @@ class Dashboard extends React.Component {
 
     this.state = {
       open: false,
+      menuOpen: false,
+      menuAnchor: false
     };
 
   }
@@ -153,13 +158,27 @@ class Dashboard extends React.Component {
             >
               Evidencija laboratorijske opreme
             </Typography>
-            <Button
+            <IconButton
                 className={classes.button}
                 style={{ color: '#fff'}}
-                onClick={() => this.context.logout()}
+                onClick={(event) => this.setState({ menuOpen: true, menuAnchor: event.currentTarget })}
             >
-              Odjavi se
-            </Button>
+              <MoreVertIcon/>
+            </IconButton>
+            <Menu
+                anchorEl={this.state.menuAnchor}
+                keepMounted
+                open={this.state.menuOpen}
+                onClose={() => this.setState({ menuOpen: false })}
+            >
+              <MenuItem>Postavke računa</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  this.setState({ menuOpen: false });
+                  this.context.logout();
+                }}
+              >Odjavi se</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -170,12 +189,12 @@ class Dashboard extends React.Component {
           open={this.state.open}
         >
           <div className={classes.toolbarIcon} style={{ display: 'flex', justifyContent: 'space-between'}}>
-            {localStorage.getItem('slikaUrl') ?
+            {localStorage.getItem('slikaUrl') === null ?
                 (<Avatar alt="Korisnik" src={localStorage.getItem('slikaUrl')} className={classes.bigAvatar} />)
                 :
                 (<Avatar className={classes.avatar} style={{ backgroundColor: '#3f51b5' }}>{`${localStorage.getItem('korisnikIme').charAt(0)}${localStorage.getItem('korisnikPrezime').charAt(0)}`}</Avatar>)
             }
-            <span style={{ paddingRight: '10%' }}>{`${localStorage.getItem('korisnikIme')} ${localStorage.getItem('korisnikPrezime')}`}</span>
+            <span>{`${localStorage.getItem('korisnikIme')} ${localStorage.getItem('korisnikPrezime')}`}</span>
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>

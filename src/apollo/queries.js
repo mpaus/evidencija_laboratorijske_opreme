@@ -1,12 +1,15 @@
 import gql from 'graphql-tag';
 
 export const KORISNIK_QUERY = gql`
-    query KorisnikQuery {
-          korisnik {
+    query KorisnikQuery($ulogaId: ID!) {
+          korisnik(ulogaId: $ulogaId) {
             id
             maticniBroj
             ime
             prezime
+            email
+            brojTelefona
+            ulogaId
             slikaUrl
             uloga {
               id
