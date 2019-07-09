@@ -20,6 +20,26 @@ export const KORISNIK_QUERY = gql`
 `
 ;
 
+export const SPECIFIC_KORISNIK_QUERY = gql`
+    query KorisnikQuery($id: ID!) {
+          korisnik(id: $id) {
+            id
+            maticniBroj
+            ime
+            prezime
+            email
+            brojTelefona
+            ulogaId
+            slikaUrl
+            uloga {
+              id
+              nazivUloge
+            }
+        }
+    }
+`
+;
+
 export const ULOGA_KORISNIKA = gql`
     query UlogaQuery {
           uloga {

@@ -19,7 +19,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { MainListItems } from './listItems';
 import Korisnici from '../korisnik/Korisnici';
 import Oprema from '../Oprema';
-import Button from '@material-ui/core/Button';
 import Zahtjevi from '../Zahtjevi';
 import { Route, withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
@@ -171,7 +170,11 @@ class Dashboard extends React.Component {
                 open={this.state.menuOpen}
                 onClose={() => this.setState({ menuOpen: false })}
             >
-              <MenuItem>Postavke računa</MenuItem>
+              <MenuItem
+                  onClick={() => this.props.history.push('/azurirajKorisnika') }
+              >
+                Postavke računa
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   this.setState({ menuOpen: false });
@@ -189,7 +192,7 @@ class Dashboard extends React.Component {
           open={this.state.open}
         >
           <div className={classes.toolbarIcon} style={{ display: 'flex', justifyContent: 'space-between'}}>
-            {localStorage.getItem('slikaUrl') === null ?
+            {localStorage.getItem('slikaUrl') !== null ?
                 (<Avatar alt="Korisnik" src={localStorage.getItem('slikaUrl')} className={classes.bigAvatar} />)
                 :
                 (<Avatar className={classes.avatar} style={{ backgroundColor: '#3f51b5' }}>{`${localStorage.getItem('korisnikIme').charAt(0)}${localStorage.getItem('korisnikPrezime').charAt(0)}`}</Avatar>)

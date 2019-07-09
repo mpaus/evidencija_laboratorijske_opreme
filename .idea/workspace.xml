@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6176ae5a-8cb0-4b48-ab50-9404d296cb9b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/korisnik/DeleteKorisnik.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/korisnik/KorisnikInfo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Korisnici.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/korisnik/Korisnici.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Korisnik.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/korisnik/Korisnik.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Oprema.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Oprema.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/apollo/mutations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/apollo/mutations.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/apollo/queries.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/apollo/queries.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/context/authContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/authContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/Dashboard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/login/CreateKorisnik.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/login/CreateKorisnik.js" afterDir="false" />
     </list>
@@ -23,116 +21,133 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnici.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="128" column="73" selection-start-line="128" selection-start-column="73" selection-end-line="128" selection-end-column="73" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/korisnik/DeleteKorisnik.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="875">
-              <caret line="60" column="78" selection-start-line="60" selection-start-column="78" selection-end-line="60" selection-end-column="78" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnik.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/login/CreateKorisnik.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-395">
-              <caret line="18" column="23" selection-start-line="18" selection-start-column="23" selection-end-line="18" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Uredaj.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="40" lean-forward="true" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/dashboard/Dashboard.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-517">
-              <caret line="171" column="63" selection-start-line="171" selection-start-column="63" selection-end-line="171" selection-end-column="63" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/apollo/queries.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dashboard/listItems.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-157">
-              <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="502">
-              <caret line="92" column="101" selection-start-line="92" selection-start-column="101" selection-end-line="92" selection-end-column="101" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/apollo/mutations.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.4932486">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/korisnik/DeleteKorisnik.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="780">
+                  <caret line="60" column="78" selection-start-line="60" selection-start-column="78" selection-end-line="60" selection-end-column="78" />
+                  <folding>
+                    <element signature="e#0#27#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnik.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
+                  <folding>
+                    <element signature="e#0#27#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/korisnik/KorisnikInfo.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="191">
+                  <caret line="75" column="21" lean-forward="true" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="50" />
+                  <folding>
+                    <element signature="e#0#26#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/apollo/queries.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/login/Prijava.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2490">
+                  <caret line="187" column="32" selection-start-line="187" selection-start-column="32" selection-end-line="195" selection-end-column="41" />
+                  <folding>
+                    <element signature="e#0#26#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/dashboard/Dashboard.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1221">
+                  <caret line="194" column="47" selection-start-line="194" selection-start-column="47" selection-end-line="194" selection-end-column="47" />
+                  <folding>
+                    <element signature="e#0#26#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/context/authContext.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="180">
+                  <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/App.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/apollo/mutations.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/App.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="570">
+                  <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="54" selection-end-column="65" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/login/CreateKorisnik.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="15">
+                  <caret line="171" column="35" selection-start-line="171" selection-start-column="35" selection-end-line="171" selection-end-column="35" />
+                  <folding>
+                    <element signature="e#0#26#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -143,21 +158,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>secondar</find>
-      <find>classes.a</find>
-      <find>localS</find>
-      <find>localStorage</find>
-      <find>odjavi se</find>
-      <find>context</find>
-      <find>handleDrawerx</find>
-      <find>100px</find>
-      <find>classes</find>
-      <find>histor</find>
-      <find>this.props</find>
-      <find>location</find>
-      <find>match</find>
-      <find>orders</find>
-      <find>console.log</find>
       <find>variables</find>
       <find>UREDAJ</find>
       <find>uredaj</find>
@@ -165,14 +165,29 @@
       <find>cache.readQuery</find>
       <find>update</find>
       <find>updateKorisnikState</find>
-      <find>state</find>
       <find>open</find>
       <find>updateKorisnik</find>
       <find>Mutation</find>
       <find>paddi</find>
-      <find>korisnik_quer</find>
-      <find>client</find>
       <find>IconMe</find>
+      <find>korisnikId</find>
+      <find>state</find>
+      <find>client</find>
+      <find>korisnik_quer</find>
+      <find>Povratak</find>
+      <find>/Q</find>
+      <find>Query</find>
+      <find>CreateKoris</find>
+      <find>styles</find>
+      <find>tableRows</find>
+      <find>updateCacheUpda</find>
+      <find>createK</find>
+      <find>CreateUser</find>
+      <find>this.props.histor</find>
+      <find>query</find>
+      <find>query:</find>
+      <find>updateUreda</find>
+      <find>slika</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/dashboard</dir>
@@ -180,6 +195,7 @@
       <dir>$PROJECT_DIR$/views</dir>
       <dir>$PROJECT_DIR$/src</dir>
       <dir>$PROJECT_DIR$/src/login</dir>
+      <dir>$PROJECT_DIR$/src/korisnik</dir>
       <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
@@ -190,7 +206,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/views/Oprema/Oprema/index.js" />
         <option value="$PROJECT_DIR$/views/Oprema/OpremaList/index.js" />
         <option value="$PROJECT_DIR$/views/Oprema/OpremaList/OpremaList.js" />
         <option value="$PROJECT_DIR$/views/Oprema/Oprema/Oprema.js" />
@@ -226,21 +241,22 @@
         <option value="$PROJECT_DIR$/src/Korisnici.js" />
         <option value="$PROJECT_DIR$/src/login/SignIn.js" />
         <option value="$PROJECT_DIR$/src/CreateUser.js" />
-        <option value="$PROJECT_DIR$/src/context/authContext.js" />
         <option value="$PROJECT_DIR$/src/login/KreirajKorisnika.js" />
         <option value="$PROJECT_DIR$/src/login/Prijava.js" />
         <option value="$PROJECT_DIR$/src/dashboard/listItems.js" />
-        <option value="$PROJECT_DIR$/src/apollo/queries.js" />
-        <option value="$PROJECT_DIR$/src/App.js" />
-        <option value="$PROJECT_DIR$/src/login/CreateKorisnik.js" />
         <option value="$PROJECT_DIR$/src/korisnik/Korisnik.js" />
         <option value="$PROJECT_DIR$/src/Oprema.js" />
-        <option value="$PROJECT_DIR$/src/korisnik/KorisnikInfo.js" />
         <option value="$PROJECT_DIR$/src/UredajInfo.js" />
-        <option value="$PROJECT_DIR$/src/apollo/mutations.js" />
         <option value="$PROJECT_DIR$/src/korisnik/Korisnici.js" />
         <option value="$PROJECT_DIR$/src/korisnik/DeleteKorisnik.js" />
+        <option value="$PROJECT_DIR$/src/apollo/queries.js" />
+        <option value="$PROJECT_DIR$/src/login/KorisnikInfo.js" />
+        <option value="$PROJECT_DIR$/src/context/authContext.js" />
+        <option value="$PROJECT_DIR$/src/App.js" />
+        <option value="$PROJECT_DIR$/src/apollo/mutations.js" />
+        <option value="$PROJECT_DIR$/src/login/CreateKorisnik.js" />
         <option value="$PROJECT_DIR$/src/dashboard/Dashboard.js" />
+        <option value="$PROJECT_DIR$/src/korisnik/KorisnikInfo.js" />
       </list>
     </option>
   </component>
@@ -422,7 +438,9 @@
       <workItem from="1561200449314" duration="36329000" />
       <workItem from="1561887009843" duration="7062000" />
       <workItem from="1561997951022" duration="20677000" />
-      <workItem from="1562412120052" duration="13410000" />
+      <workItem from="1562412120052" duration="27938000" />
+      <workItem from="1562526559347" duration="856000" />
+      <workItem from="1562696924482" duration="2203000" />
     </task>
     <task id="LOCAL-00001" summary="Creates a repository">
       <created>1560790050288</created>
@@ -459,14 +477,21 @@
       <option name="project" value="LOCAL" />
       <updated>1562265074262</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Updates korisnik frontend">
+      <created>1562430256152</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1562430256152</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="192044000" />
+    <option name="totallyTimeSpent" value="209631000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4979592" weight="0.24781573" />
@@ -483,7 +508,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32876712" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32876712" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32876712" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32876712" />
       <window_info anchor="bottom" id="GraphQL" order="13" />
@@ -523,7 +548,8 @@
     <MESSAGE value="Created all mutations for uredaj" />
     <MESSAGE value="Added tabs to tables" />
     <MESSAGE value="Style updates and bug fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Style updates and bug fixes" />
+    <MESSAGE value="Updates korisnik frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updates korisnik frontend" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/views/Oprema/OpremaList/OpremaList.js" />
@@ -678,25 +704,8 @@
     <entry file="file://$PROJECT_DIR$/src/dashboard/README.md" />
     <entry file="file://$PROJECT_DIR$/src/dashboard/SimpleTable.js" />
     <entry file="file://$PROJECT_DIR$/src/dashboard/SimpleLineChart.js" />
-    <entry file="file://$PROJECT_DIR$/src/login/Prijava.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2490">
-          <caret line="187" column="32" selection-start-line="187" selection-start-column="32" selection-end-line="195" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.css">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/context/authContext.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -712,69 +721,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="92" column="101" selection-start-line="92" selection-start-column="101" selection-end-line="92" selection-end-column="101" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/korisnik/KorisnikInfo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/apollo/mutations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnik.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnici.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="128" column="73" selection-start-line="128" selection-start-column="73" selection-end-line="128" selection-end-column="73" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/UredajInfo.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1684">
           <caret line="27" column="6" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dashboard/listItems.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-157">
-          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -789,16 +741,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/apollo/queries.js">
+    <entry file="file://$PROJECT_DIR$/src/dashboard/listItems.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+        <state relative-caret-position="272">
+          <caret line="35" column="62" lean-forward="true" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="62" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnici.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6">
+          <caret line="30" column="6" lean-forward="true" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/korisnik/DeleteKorisnik.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="875">
+        <state relative-caret-position="780">
           <caret line="60" column="78" selection-start-line="60" selection-start-column="78" selection-end-line="60" selection-end-column="78" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
@@ -806,17 +771,78 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/korisnik/Korisnik.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/apollo/queries.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/login/Prijava.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2490">
+          <caret line="187" column="32" selection-start-line="187" selection-start-column="32" selection-end-line="195" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/apollo/mutations.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/login/CreateKorisnik.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-395">
-          <caret line="18" column="23" selection-start-line="18" selection-start-column="23" selection-end-line="18" selection-end-column="23" />
+        <state relative-caret-position="15">
+          <caret line="171" column="35" selection-start-line="171" selection-start-column="35" selection-end-line="171" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/context/authContext.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dashboard/Dashboard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-517">
-          <caret line="171" column="63" selection-start-line="171" selection-start-column="63" selection-end-line="171" selection-end-column="63" />
+        <state relative-caret-position="1221">
+          <caret line="194" column="47" selection-start-line="194" selection-start-column="47" selection-end-line="194" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/korisnik/KorisnikInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="75" column="21" lean-forward="true" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="50" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>

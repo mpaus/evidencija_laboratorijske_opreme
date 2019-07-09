@@ -16,7 +16,7 @@ import {Query, Mutation} from "react-apollo";
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import AuthContext from '../context/authContext';
-import {ULOGA_KORISNIKA} from '../apollo/queries';
+import {ULOGA_KORISNIKA, SPECIFIC_KORISNIK_QUERY} from '../apollo/queries';
 import { CREATE_KORISNIK } from '../apollo/mutations';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
@@ -26,6 +26,9 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
+import MaterialTable from "material-table";
+import Korisnik from "../korisnik/Korisnik";
+import KorisnikInfo from '../korisnik/KorisnikInfo';
 
 const styles = theme => ({
     appBar: {
@@ -68,24 +71,29 @@ class CreateKorisnik extends React.Component {
 
     static contextType = AuthContext;
 
-    state = {
-        vrstaKorisnika: 'student',
-        email: '',
-        lozinka: '',
-        maticniBroj: '',
-        ime: '',
-        prezime: '',
-        brojTelefona: '',
-        emailError: false,
-        lozinkaError: false,
-        maticniBrojError: false,
-        imeError: false,
-        prezimeError: false,
-        brojTelefonaError: false,
-        ulogaId: '1',
-        slika: null,
-        showPassword: false
-    };
+    constructor(props) {
+        super(props);
+
+
+        this.state = {
+            vrstaKorisnika: 'student',
+            email: '',
+            lozinka: '',
+            maticniBroj: '',
+            ime: '',
+            prezime: '',
+            brojTelefona: '',
+            emailError: false,
+            lozinkaError: false,
+            maticniBrojError: false,
+            imeError: false,
+            prezimeError: false,
+            brojTelefonaError: false,
+            ulogaId: '1',
+            slika: null,
+            showPassword: false
+        };
+    }
 
     update = async () => {
 
@@ -176,188 +184,199 @@ return (
                 >
                     Unesite podatke o novom korisninku
                 </Typography>
-                <Mutation mutation={CREATE_KORISNIK} update={this.update}>
+                {this.props.korisnikId ? (
+                    <Query query={SPECIFIC_KORISNIK_QUERY} variables={{ id: this.props.korisnikId }}>
+                        {
+                            ({loading, error, data}) => {
+                                if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
+                                let odabraniKorisnik = {};
+                                data && data.korisnik && data.korisnik.forEach(korisnik => odabraniKorisnik = korisnik);
+                                return (<KorisnikInfo korisnik={odabraniKorisnik} {...this.props} />);
+                            }
+                        }
+                    </Query>) : (<Mutation mutation={CREATE_KORISNIK} update={this.update}>
                     {createKorisnik => (
                         <React.Fragment>
-                        <form>
-                            <FormGroup>
-                                <FormControl>
-                                    <FormLabel style={{ paddingBottom: '10px' }}>Vrsta korisnika</FormLabel>
-                                    <RadioGroup
-                                        name="vrstaKorisnika"
-                                        style={{ flexDirection: 'row' }}
-                                        value={this.state.ulogaId}
-                                        onChange={this.handleUlogaChange}
-                                    >
-                                        <Query query={ULOGA_KORISNIKA}>
-                                            {
-                                                ({loading, error, data}) => {
-                                                    if(loading) return <div>Loading</div>;
-                                                    if(error) return <div>{error}</div>;
-                                                    const radioButtons = [];
+                            <form>
+                                <FormGroup>
+                                    <FormControl>
+                                        <FormLabel style={{ paddingBottom: '10px' }}>Vrsta korisnika</FormLabel>
+                                        <RadioGroup
+                                            name="vrstaKorisnika"
+                                            style={{ flexDirection: 'row' }}
+                                            value={this.state.ulogaId}
+                                            onChange={this.handleUlogaChange}
+                                        >
+                                            <Query query={ULOGA_KORISNIKA}>
+                                                {
+                                                    ({loading, error, data}) => {
+                                                        if(loading) return <div>Loading</div>;
+                                                        if(error) return <div>{error}</div>;
+                                                        const radioButtons = [];
 
-                                                    data && data.uloga && data.uloga.forEach((uloga, index) => {
-                                                        radioButtons.push(<FormControlLabel key={index} value={uloga.id} control={<Radio/>} label={uloga.nazivUloge}/>)
-                                                    });
+                                                        data && data.uloga && data.uloga.forEach((uloga, index) => {
+                                                            radioButtons.push(<FormControlLabel key={index} value={uloga.id} control={<Radio/>} label={uloga.nazivUloge}/>)
+                                                        });
 
-                                                    return radioButtons;
+                                                        return radioButtons;
+                                                    }
                                                 }
-                                            }
-                                        </Query>
-                                    </RadioGroup>
-                                </FormControl>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                        <FormControl required fullWidth>
-                                            <InputLabel htmlFor="email">Email</InputLabel>
-                                        <Input
-                                            required
-                                            id="email"
-                                            error={this.state.lozinkaError}
-                                            name="email"
-                                            onChange={this.handleChange('email')}
-                                        />
-                                        {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
+                                            </Query>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="email">Email</InputLabel>
+                                                <Input
+                                                    required
+                                                    id="email"
+                                                    error={this.state.emailError}
+                                                    name="email"
+                                                    onChange={this.handleChange('email')}
+                                                />
+                                                {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
                                         </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControl required fullWidth>
-                                        <InputLabel htmlFor="lozinka">Lozinka</InputLabel>
-                                        <Input
-                                            name="lozinka"
-                                            type={this.state.showPassword ? 'text' : 'password'}
-                                            id="lozinka"
-                                            error={this.state.lozinkaError}
-                                            onChange={this.handleChange('lozinka')}
-                                            endAdornment={
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="Uključi vidljivost lozinke"
-                                                        onClick={() => this.setState((prevState) => ({
-                                                            showPassword: !prevState.showPassword
-                                                        }))}
-                                                    >
-                                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            }
-                                        />
-                                            {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
+                                        <Grid item xs={12}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="lozinka">Lozinka</InputLabel>
+                                                <Input
+                                                    name="lozinka"
+                                                    type={this.state.showPassword ? 'text' : 'password'}
+                                                    id="lozinka"
+                                                    error={this.state.lozinkaError}
+                                                    onChange={this.handleChange('lozinka')}
+                                                    endAdornment={
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                aria-label="Uključi vidljivost lozinke"
+                                                                onClick={() => this.setState((prevState) => ({
+                                                                    showPassword: !prevState.showPassword
+                                                                }))}
+                                                            >
+                                                                {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    }
+                                                />
+                                                {this.state.lozinkaError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="maticniBroj">Matični broj</InputLabel>
+                                                <Input
+                                                    required
+                                                    id="maticniBroj"
+                                                    error={this.state.maticniBrojError}
+                                                    name="maticniBroj"
+                                                    label="Matični broj"
+                                                    onChange={this.handleChange('maticniBroj')}
+                                                />
+                                                {this.state.maticniBrojError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="ime">Ime</InputLabel>
+                                                <Input
+                                                    required
+                                                    id="ime"
+                                                    name="ime"
+                                                    error={this.state.imeError}
+                                                    label="Ime"
+                                                    onChange={this.handleChange('ime')}
+                                                />
+                                                {this.state.imeError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="prezime">Prezime</InputLabel>
+                                                <Input
+                                                    required
+                                                    id="prezime"
+                                                    name="prezime"
+                                                    error={this.state.prezimeError}
+                                                    label="Prezime"
+                                                    onChange={this.handleChange('prezime')}
+                                                />
+                                                {this.state.prezimeError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ padding: '10px 0px' }}>
+                                                <FormLabel>
+                                                    Odaberite sliku
+                                                </FormLabel>
+                                            </div>
+                                            <div>
+                                                <input
+                                                    type="file"
+                                                    onChange={e => this.handleImageChange(e)}
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControl required fullWidth>
+                                                <InputLabel htmlFor="brojTelefona">Broj mobitela</InputLabel>
+                                                <Input
+                                                    required
+                                                    id="brojTelefona"
+                                                    error={this.state.brojTelefonaError}
+                                                    name="brojTelefona"
+                                                    onChange={this.handleChange('brojTelefona')}
+                                                />
+                                                {this.state.brojTelefonaError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                            </FormControl>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControl required fullWidth>
-                                            <InputLabel htmlFor="maticniBroj">Matični broj</InputLabel>
-                                        <Input
-                                            required
-                                            id="maticniBroj"
-                                            error={this.state.lozinkaError}
-                                            name="maticniBroj"
-                                            label="Matični broj"
-                                            onChange={this.handleChange('maticniBroj')}
-                                        />
-                                        {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
-                                        </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl required fullWidth>
-                                            <InputLabel htmlFor="ime">Ime</InputLabel>
-                                        <Input
-                                            required
-                                            id="ime"
-                                            name="ime"
-                                            error={this.state.lozinkaError}
-                                            label="Ime"
-                                            onChange={this.handleChange('ime')}
-                                        />
-                                        {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
-                                        </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl required fullWidth>
-                                            <InputLabel htmlFor="prezime">Prezime</InputLabel>
-                                        <Input
-                                            required
-                                            id="prezime"
-                                            name="prezime"
-                                            error={this.state.lozinkaError}
-                                            label="Prezime"
-                                            onChange={this.handleChange('prezime')}
-                                        />
-                                        {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
-                                        </Grid>
-                                    <Grid item xs={12}>
-                                    <div style={{ padding: '10px 0px' }}>
-                                    <FormLabel>
-                                    Odaberite sliku
-                                    </FormLabel>
-                                    </div>
-                                    <div>
-                                    <input
-                                        type="file"
-                                        onChange={e => this.handleImageChange(e)}
-                                    />
-                                    </div>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControl required fullWidth>
-                                            <InputLabel htmlFor="brojTelefona">Broj mobitela</InputLabel>
-                                        <Input
-                                            required
-                                            id="brojTelefona"
-                                            error={this.state.lozinkaError}
-                                            name="brojTelefona"
-                                            onChange={this.handleChange('brojTelefona')}
-                                        />
-                                        {this.state.emailError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
-                                        </FormControl>
-                                        </Grid>
-                                </Grid>
-                            </FormGroup>
-                        </form>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Button
-                                variant="contained"
-                                style={{ marginLeft: '0px' }}
-                                className={classes.button}
-                                onClick={() => this.props.history.push(`/auth`)}
-                            >
-                                Povratak
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                style={{ marginLeft: '0px' }}
-                                className={classes.button}
-                                onClick={() => this.validateForm(
-                                    [
-                                        'email',
-                                        'lozinka',
-                                        'maticniBroj',
-                                        'ime',
-                                        'prezime',
-                                        'brojTelefona'
-                                    ])
-                                    && createKorisnik({ variables: {
-                                            input: {
-                                                email: this.state.email,
-                                                lozinka: this.state.lozinka,
-                                                maticniBroj: this.state.maticniBroj,
-                                                ime: this.state.ime,
-                                                prezime: this.state.prezime,
-                                                brojTelefona: this.state.brojTelefona,
-                                                ulogaId: this.state.ulogaId,
-                                            },
-                                            file: this.state.slika
-                                        }})}
-                            >
-                                Spremi korisnika
-                            </Button>
-                        </div>
+                                </FormGroup>
+                            </form>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Button
+                                    variant="contained"
+                                    style={{ marginLeft: '0px' }}
+                                    className={classes.button}
+                                    onClick={() => this.props.history.push(`/auth`)}
+                                >
+                                    Povratak
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    style={{ marginLeft: '0px' }}
+                                    className={classes.button}
+                                    onClick={() => this.validateForm(
+                                        [
+                                            'email',
+                                            'lozinka',
+                                            'maticniBroj',
+                                            'ime',
+                                            'prezime',
+                                            'brojTelefona'
+                                        ])
+                                        && createKorisnik({ variables: {
+                                                input: {
+                                                    email: this.state.email,
+                                                    lozinka: this.state.lozinka,
+                                                    maticniBroj: this.state.maticniBroj,
+                                                    ime: this.state.ime,
+                                                    prezime: this.state.prezime,
+                                                    brojTelefona: this.state.brojTelefona,
+                                                    ulogaId: this.state.ulogaId,
+                                                },
+                                                file: this.state.slika
+                                            }})}
+                                >
+                                    Spremi korisnika
+                                </Button>
+                            </div>
                         </React.Fragment>
                     )}
-                </Mutation>
+                </Mutation>)}
             </React.Fragment>
         </Paper>
     </main>

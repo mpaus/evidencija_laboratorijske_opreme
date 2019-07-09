@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import { ApolloProvider} from 'react-apollo';
 import Dashboard from './dashboard/Dashboard';
 import SignIn from './login/Prijava';
-import CreateUser from './login/CreateKorisnik';
+import CreateKorisnik from './login/CreateKorisnik';
 import AuthContext from './context/authContext';
 import moment from 'moment';
 
@@ -94,7 +94,8 @@ class App extends Component {
                         {!this.state.token && <Redirect from="/dashboard" to="/auth" />}
                         {!this.state.token && <Route path="/auth" component={SignIn} />}
                         {this.state.token && <Route path="/dashboard" component={Dashboard} />}
-                        {!this.state.token && <Route path="/kreirajKorisnika" component={CreateUser} />}
+                        {!this.state.token && <Route path="/kreirajKorisnika" component={CreateKorisnik} />}
+                        {this.state.token && <Route path="/azurirajKorisnika" render={(props) => <CreateKorisnik korisnikId={this.state.korisnikId} {...props} />} />}
                     </Switch>
                     </div>
                 </AuthContext.Provider>

@@ -14,6 +14,25 @@ export const CREATE_KORISNIK = gql`
     }
 `;
 
+export const UPDATE_KORISNIK = gql`
+    mutation UpdateKorisnik($input: UpdateKorisnikInput!, $file: Upload){
+        UpdateKorisnik(input: $input, file: $file){
+            id
+            maticniBroj
+            ime
+            prezime
+            email
+            brojTelefona
+            ulogaId
+            slikaUrl
+            uloga {
+              id
+              nazivUloge
+            }
+          }
+    }
+`;
+
 export const DELETE_KORISNIK = gql`
   mutation DeleteKorisnik($input: ID!) {
     DeleteKorisnik(input: $input) {
