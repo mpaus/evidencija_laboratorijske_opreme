@@ -1,35 +1,50 @@
 import React, {Component} from 'react';
 import Card from '@material-ui/core/Card';
-import Composer from 'react-composer';
-import {Query,Mutation} from 'react-apollo';
+import {Query} from 'react-apollo';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { UREDAJ_QUERY, AVAILABLE_UREDAJ_QUERY } from './apollo/queries';
+import { UREDAJ_QUERY, AVAILABLE_UREDAJ_QUERY } from '../apollo/queries';
 import MaterialTable from 'material-table';
 import Uredaj from './Uredaj';
 import UredajInfo from './UredajInfo';
-import CreateZahtjev from './CreateZahtjev';
-import { DELETE_UREDAJ } from './apollo/mutations';
-
+import CreateZahtjev from '../zahtjevPosudbe/CreateZahtjev';
+import {Typography} from "@material-ui/core";
+import DeleteUredaj from './DeleteUredaj';
 export class Oprema extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            deleteDialogOpen: false,
             dialogOpen: false,
             uredajInfo: null,
+            deleteUredajId: null,
             createZahtjevDialogOpen: false,
-            prikaz: 'dostupniUredaji'
+            prikaz: 'dostupniUredaji',
         };
 
+        this.setZahtjevDialogOpen = this.setZahtjevDialogOpen.bind(this);
         this.updateUredajInfoState = this.updateUredajInfoState.bind(this);
         this.updateZahtjevState = this.updateZahtjevState.bind(this);
+        this.updateDeleteDialogOpenState = this.updateDeleteDialogOpenState.bind(this);
     }
+
+    setZahtjevDialogOpen = (state) => {
+        this.setState({
+            createZahtjevDialogOpen: state
+        });
+    };
+
+    updateDeleteDialogOpenState = (state) => {
+        this.setState({
+            deleteDialogOpen: state
+        })
+    };
 
     updateUredajInfoState = (state) => {
         this.setState({
-            uredajInfo: state
+            dialogOpen: state
         })
     };
 
@@ -40,31 +55,10 @@ export class Oprema extends Component {
         })
     };
 
-    updateCacheDelete = (cache, { data : { DeleteUredaj: { id }}}) => {
-        const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
-
-        console.log(id);
-
-        cache.writeQuery({
-            query: UREDAJ_QUERY,
-            data: {
-                uredaj: uredaj.filter(uredaj => uredaj.id !== id)
-            }
-        });
-
-    };
-
     render() {
-        console.log(this.state.prikaz);
+        console.log(this.state);
         return (
             <Card>
-                <Composer
-                    components={[
-                        <Mutation mutation={DELETE_UREDAJ} update={this.updateCacheDelete}/>,
-                    ]}
-                 >
-                {([deleteUredaj]) => (
-                    <React.Fragment>
                     <Tabs value={this.state.prikaz} onChange={(e, value) => this.setState({ prikaz: value })}>
                         <Tab value="dostupniUredaji" label="Dostupni uređaji" wrapped />
                         <Tab value="sviUredaji" label="Svi uređaji" />
@@ -73,12 +67,10 @@ export class Oprema extends Component {
                             (<Query query={UREDAJ_QUERY}>
                         {
                             ({loading, error, data}) => {
-                                if (loading) return <h4>Loading</h4>;
-                                if (error) console.log(error);
-                                console.log(data);
+                                if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                 const tableRows = [];
                                 data && data.uredaj && data.uredaj.forEach((uredaj) => {
-                                    console.log(uredaj, 'ERROR');
                                     tableRows.push({
                                         serijskiBroj: uredaj.serijskiBroj,
                                         nazivUredaja: uredaj.nazivUredaja,
@@ -119,19 +111,14 @@ export class Oprema extends Component {
                                             tooltip: 'Izbriši uređaj',
                                             onClick: (event, rowData) => {
                                                 const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
-                                                return deleteUredaj({
-                                                                variables: {
-                                                                    input: odabraniUredaj[0].id
-                                                                }
-                                                            })
+                                                return this.setState({ deleteDialogOpen: true, deleteUredajId: odabraniUredaj[0].id })
                                             }
                                         },
-
                                         {
                                             icon: 'add_box',
                                             tooltip: 'Dodaj uređaj',
                                             isFreeAction: true,
-                                            onClick: () => this.setState({ dialogOpen: true })
+                                            onClick: () => this.setState({ dialogOpen: true, uredajInfo: null } )
                                         }
                                     ]}
                                     options={{
@@ -145,12 +132,10 @@ export class Oprema extends Component {
                             (<Query query={AVAILABLE_UREDAJ_QUERY} variables={{ stanjeId: 1 }}>
                                 {
                                     ({loading, error, data}) => {
-                                        if (loading) return <h4>Loading</h4>;
-                                        if (error) console.log(error);
-                                        console.log(data);
+                                        if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                        if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                         const tableRows = [];
                                         data && data.uredaj && data.uredaj.forEach((uredaj) => {
-                                            console.log(uredaj, 'ERROR');
                                             tableRows.push({
                                                 serijskiBroj: uredaj.serijskiBroj,
                                                 nazivUredaja: uredaj.nazivUredaja,
@@ -191,11 +176,7 @@ export class Oprema extends Component {
                                                     tooltip: 'Izbriši uređaj',
                                                     onClick: (event, rowData) => {
                                                         const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
-                                                        return deleteUredaj({
-                                                            variables: {
-                                                                input: odabraniUredaj[0].id
-                                                            }
-                                                        })
+                                                        return this.setState({ deleteDialogOpen: true, deleteUredajId: odabraniUredaj[0].id })
                                                     }
                                                 },
 
@@ -203,7 +184,7 @@ export class Oprema extends Component {
                                                     icon: 'add_box',
                                                     tooltip: 'Dodaj uređaj',
                                                     isFreeAction: true,
-                                                    onClick: () => this.setState({ dialogOpen: true })
+                                                    onClick: () => this.setState({ dialogOpen: true, uredajInfo: null })
                                                 }
                                             ]}
                                             options={{
@@ -213,16 +194,21 @@ export class Oprema extends Component {
                                     }
                                 }
                             </Query>)}
-                    </React.Fragment>)
-                }
-                </Composer>
                 <UredajInfo
                     open={this.state.dialogOpen}
+                    prikaz={this.state.prikaz}
                     uredajInfo={this.state.uredajInfo}
                     uredajInfoState={this.updateUredajInfoState}
                 />
+                <DeleteUredaj
+                    open={this.state.deleteDialogOpen}
+                    prikaz={this.state.prikaz}
+                    updateDeleteDialogOpenState={this.updateDeleteDialogOpenState}
+                    deleteUredajId={this.state.deleteUredajId}
+                />
                 <CreateZahtjev
                   open={this.state.createZahtjevDialogOpen}
+                  setZahtjevDialogOpen={this.setZahtjevDialogOpen}
                   data={this.state.uredajInfo}
                 />
             </Card>

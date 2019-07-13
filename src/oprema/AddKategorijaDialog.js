@@ -8,8 +8,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { Mutation } from 'react-apollo';
-import {KATEGORIJA_QUERY} from './apollo/queries';
-import {CREATE_KATEGORIJA} from './apollo/mutations';
+import {KATEGORIJA_QUERY} from '../apollo/queries';
+import {CREATE_KATEGORIJA} from '../apollo/mutations';
 
 class AddKategorijaDialog extends React.Component {
 
@@ -23,7 +23,7 @@ class AddKategorijaDialog extends React.Component {
         this.state = {
             open: false,
             update: false,
-            nazivKategorije: ''
+            nazivKategorije: '',
         };
     }
 
@@ -39,7 +39,7 @@ class AddKategorijaDialog extends React.Component {
             }
         });
 
-        this.setState({ open: false });
+        this.props.addKategorijaDialogOpen(false);
     };
 
     handleChange = name => ({ target: element }) => {
@@ -71,9 +71,23 @@ class AddKategorijaDialog extends React.Component {
                 <DialogActions>
                     <Mutation mutation={CREATE_KATEGORIJA} update={this.updateCache}>
                         {createKategorija => (
-                            <Button onClick={() => createKategorija({ variables: { input: this.state.nazivKategorije }})} color="primary">
-                                Spremi kategoriju
-                            </Button>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Button
+                                    variant="contained"
+                                    style={{ marginRight: '20px' }}
+                                    onClick={() => this.props.addKategorijaDialogOpen(false)}
+                                >
+                                    Povratak
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    style={{ marginLeft: '0px' }}
+                                    onClick={() => createKategorija({ variables: { input: this.state.nazivKategorije }})}
+                                >
+                                    Spremi kategoriju
+                                </Button>
+                            </div>
                         )}
                     </Mutation>
                 </DialogActions>

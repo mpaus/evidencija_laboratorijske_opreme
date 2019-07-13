@@ -1,22 +1,16 @@
 import React  from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import {Mutation, Query} from 'react-apollo';
-import { KATEGORIJA_QUERY, UREDAJ_QUERY } from './apollo/queries';
-import {CREATE_UREDAJ, UPDATE_UREDAJ } from './apollo/mutations';
-import Typography from "@material-ui/core/Typography";
+import {AVAILABLE_UREDAJ_QUERY, KATEGORIJA_QUERY, UREDAJ_QUERY} from '../apollo/queries';
+import {CREATE_UREDAJ, UPDATE_UREDAJ } from '../apollo/mutations';
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
 import TextField from "@material-ui/core/TextField";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -24,6 +18,8 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import AddKategorijaDialog from './AddKategorijaDialog';
 import Composer from "react-composer";
+import FormLabel from "@material-ui/core/FormLabel";
+import Typography from "@material-ui/core/Typography";
 
 class UredajInfo extends React.Component {
 
@@ -51,9 +47,18 @@ class UredajInfo extends React.Component {
             napomena: '',
             specifikacije: '',
             slika: null,
-            kategorijaId: null
+            kategorijaId: null,
+            addKategorijaDialogOpen: false
         };
+
+        this.addKategorijaDialogOpen = this.addKategorijaDialogOpen.bind(this);
     }
+
+    addKategorijaDialogOpen = (state) => {
+        this.setState({
+            addKategorijaDialogOpen: state
+        });
+    };
 
     handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -69,36 +74,58 @@ class UredajInfo extends React.Component {
     };
 
     updateCache = (cache, { data: { CreateUredaj }}) => {
-        const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
+        if(this.props.prikaz !== 'dostupniUredaji') {
+            const {uredaj} = cache.readQuery({query: UREDAJ_QUERY});
 
-        console.log(uredaj, CreateUredaj);
+            console.log(uredaj, CreateUredaj);
 
-        cache.writeQuery({
-            query: UREDAJ_QUERY,
-            data: {
-                uredaj: uredaj.concat(CreateUredaj)
-            }
-        });
+            cache.writeQuery({
+                query: UREDAJ_QUERY,
+                data: {
+                    uredaj: uredaj.concat(CreateUredaj)
+                }
+            });
+        } else {
+            const {uredaj} = cache.readQuery({query: AVAILABLE_UREDAJ_QUERY, variables: { stanjeId: 1 }});
 
-        this.setState({ open: false });
+            cache.writeQuery({
+                query: AVAILABLE_UREDAJ_QUERY,
+                variables: { stanjeId: 1 },
+                data: {
+                    uredaj: uredaj.concat(CreateUredaj)
+                }
+            });
+        }
+
+        this.props.uredajInfoState(false);
     };
 
     updateCacheUpdate = (cache, { data: { UpdateUredaj }}) => {
-        const { uredaj } = cache.readQuery({ query: UREDAJ_QUERY });
+        if(this.props.prikaz !== 'dostupniUredaji') {
+            const {uredaj} = cache.readQuery({query: UREDAJ_QUERY});
 
-        cache.writeQuery({
-            query: UREDAJ_QUERY,
-            data: {
-                uredaj: uredaj.map((uredajListItem, index) => uredajListItem.id === UpdateUredaj.id ? UpdateUredaj : uredajListItem)
-            }
-        });
+            cache.writeQuery({
+                query: UREDAJ_QUERY,
+                data: {
+                    uredaj: uredaj.map((uredajListItem) => uredajListItem.id === UpdateUredaj.id ? UpdateUredaj : uredajListItem)
+                }
+            });
+        } else {
+            const {uredaj} = cache.readQuery({query: AVAILABLE_UREDAJ_QUERY, variables: { stanjeId: 1 }});
 
-        this.props.uredajInfoState(null);
-        this.setState({ open: false });
+            cache.writeQuery({
+                query: AVAILABLE_UREDAJ_QUERY,
+                variables: { stanjeId: 1 },
+                data: {
+                    uredaj: uredaj.map((uredajListItem) => uredajListItem.id === UpdateUredaj.id ? UpdateUredaj : uredajListItem)
+                }
+            });
+        }
+
+        this.props.uredajInfoState(false);
     };
 
     render(){
-        console.log(this.props, 'PROP');
         return (
             <Dialog
                 open={this.state.open}
@@ -108,8 +135,8 @@ class UredajInfo extends React.Component {
                     <DialogContent>
                         <Composer
                             components={[
-                                <Mutation mutation={CREATE_UREDAJ} update={this.updateCache}/>,
-                                <Mutation mutation={UPDATE_UREDAJ} update={this.updateCacheUpdate}/>
+                                <Mutation mutation={CREATE_UREDAJ} update={this.updateCache}>{() => {}}</Mutation>,
+                                <Mutation mutation={UPDATE_UREDAJ} update={this.updateCacheUpdate}>{() => {}}</Mutation>
                             ]}
                         >
                         {([createUredaj, updateUredaj]) => (
@@ -118,28 +145,31 @@ class UredajInfo extends React.Component {
                                     ref={ref => this.form = ref}
                                 >
                                     <FormGroup>
-                                        <FormControl>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={11}>
+                                        <FormControl
+                                            fullWidth
+                                        >
                                             <RadioGroup
                                                 name="vrstaKorisnika"
                                                 onChange={this.handleUlogaChange}
                                             >
+                                                <InputLabel htmlFor="kategorija-uredaj">Kategorija</InputLabel>
                                                 <Query query={KATEGORIJA_QUERY}>
                                                     {
                                                         ({loading, error, data}) => {
-                                                            if(loading) return <h4>Loading</h4>;
-                                                            if(error) console.log(error);
-                                                            console.log(data);
+                                                            if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                                            if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                                             const menuItems = [];
 
-                                                            data && data.kategorija && data.kategorija.forEach((kategorija) => {
-                                                                menuItems.push(<MenuItem value={kategorija.id}>{kategorija.nazivKategorije}</MenuItem>)
+                                                            data && data.kategorija && data.kategorija.forEach((kategorija, index) => {
+                                                                menuItems.push(<MenuItem key={index} value={kategorija.id}>{kategorija.nazivKategorije}</MenuItem>)
                                                             });
 
                                                             return (
-                                                                <React.Fragment>
-                                                                <InputLabel htmlFor="kategorija-uredaj">Kategorija</InputLabel>
                                                                 <Select
-                                                                    value={this.state.kategorijaId}
+                                                                    value={this.state.kategorijaId || ''}
+                                                                    autoWidth={true}
                                                                     inputProps={{
                                                                     name: 'kategorija',
                                                                     id: 'kateogrija-uredaj',
@@ -147,28 +177,30 @@ class UredajInfo extends React.Component {
                                                                 onChange={this.handleChange('kategorijaId')}
                                                             >
                                                                 {menuItems}
-                                                            </Select>
-                                                                    <IconButton
-                                                                        aria-label="Dodaj kategoriju"
-                                                                        size="small"
-                                                                        onClick={() => this.setState({ dialogOpen: true })}
-                                                                    >
-                                                                        <AddIcon fontSize="inherit" />
-                                                                    </IconButton>
-                                                                </React.Fragment>);
+                                                            </Select>);
                                                         }
                                                     }
                                                 </Query>
                                             </RadioGroup>
                                         </FormControl>
-                                        <Grid container spacing={24}>
+                                            </Grid>
+                                            <Grid item xs={1}>
+                                            <IconButton
+                                                aria-label="Dodaj kategoriju"
+                                                style={{ marginTop: '20px', marginLeft: '2.5%' }}
+                                                size="small"
+                                                onClick={() => this.setState({ addKategorijaDialogOpen: true })}
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                            </Grid>
                                             <Grid item xs={12}>
                                                 <TextField
                                                     required
                                                     id="nazivUredaja"
                                                     name="nazivUredaja"
                                                     label="Naziv uređaja"
-                                                    value={this.state.nazivUredaja}
+                                                    value={this.state.nazivUredaja || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('nazivUredaja')}
                                                 />
@@ -179,7 +211,7 @@ class UredajInfo extends React.Component {
                                                     id="serijskiBroj"
                                                     name="serijskiBroj"
                                                     label="Serijski broj"
-                                                    value={this.state.serijskiBroj}
+                                                    value={this.state.serijskiBroj || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('serijskiBroj')}
                                                 />
@@ -190,42 +222,40 @@ class UredajInfo extends React.Component {
                                                     id="specifikacije"
                                                     name="specifikacije"
                                                     label="Specifikacije"
-                                                    value={this.state.specifikacije}
+                                                    value={this.state.specifikacije || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('specifikacije')}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
+                                            <Grid item xs={12}>
                                                 <TextField
                                                     required
                                                     id="cijena"
                                                     name="cijena"
                                                     label="Cijena"
-                                                    value={this.state.cijena}
+                                                    value={this.state.cijena || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('cijena')}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} sm={6}>
+                                            <Grid item xs={12}>
                                                 <TextField
                                                     required
                                                     id="napomena"
                                                     name="napomena"
                                                     label="Napomena"
-                                                    value={this.state.napomena}
+                                                    value={this.state.napomena || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('napomena')}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12}>
-                                                <Button
-                                                    color="primary"
-                                                    variant="raised"
-                                                    label="Choose a file to upload"
-                                                    onClick={() => this.imageUpload.click()}
-                                                />
+                                            <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                                                <div style={{ padding: '10px 0px' }}>
+                                                    <FormLabel>
+                                                        Odaberite sliku
+                                                    </FormLabel>
+                                                </div>
                                                 <input
-                                                    ref={ref => (this.imageUpload = ref)}
                                                     type="file"
                                                     onChange={e => this.handleImageChange(e)}
                                                 />
@@ -233,9 +263,17 @@ class UredajInfo extends React.Component {
                                         </Grid>
                                     </FormGroup>
                                 </form>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Button
+                                        variant="contained"
+                                        style={{ marginLeft: '0px' }}
+                                        onClick={() => this.props.uredajInfoState(false)}
+                                    >
+                                        Povratak
+                                    </Button>
                                 <Button
                                     color="primary"
-                                    variant="raised"
+                                    variant="contained"
                                     onClick={() => this.props.uredajInfo ?
                                         updateUredaj({ variables: {
                                                 input: {
@@ -264,12 +302,14 @@ class UredajInfo extends React.Component {
                                 >
                                     {this.props.uredajInfo ? 'Ažuriraj uređaj' : 'Spremi uređaj'}
                                 </Button>
+                                </div>
                             </React.Fragment>
                         )}
                         </Composer>
                     </DialogContent>
                     <AddKategorijaDialog
-                        open={this.state.dialogOpen}
+                        open={this.state.addKategorijaDialogOpen}
+                        addKategorijaDialogOpen={this.addKategorijaDialogOpen}
                         />
             </Dialog>
         )

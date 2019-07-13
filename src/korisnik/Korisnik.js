@@ -10,23 +10,23 @@ class Korisnik extends React.Component {
             <Card>
                 <div>
                   <Grid container spacing={3}>
-                      <Grid item xs={6} style={{ display: 'flex', justifyContent: 'space-around'}}>
-                          <img src={this.props.data.slikaUrl} width={250} height={250} style={{ padding: '10px' }} alt={`${this.props.data.ime} ${this.props.data.prezime}`}/>
+                      <Grid item xs={5} style={{ display: 'flex' }}>
+                          <img src={this.props.data.slikaUrl} width={250} height={250} alt={`${this.props.data.ime} ${this.props.data.prezime}`}/>
                       </Grid>
-                    <Grid item xs={6} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', textAlign: 'left'}}>
-                    <Typography color="textSecondary" >
+                    <Grid item xs={7} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', textAlign: 'left'}}>
+                    <Typography>
                         Korisnik: {`${this.props.data.ime} ${this.props.data.prezime}`}
                     </Typography>
-                    <Typography color="textSecondary">
+                    <Typography>
                         Matični broj: {this.props.data.maticniBroj}
                     </Typography>
-                    <Typography color="textSecondary">
+                    <Typography>
                         Uloga: {this.props.data.uloga && this.props.data.uloga.nazivUloge}
                     </Typography>
-                        <Typography color="textSecondary">
+                        <Typography>
                             Email: {this.props.data.email}
                         </Typography>
-                        <Typography color="textSecondary">
+                        <Typography>
                             Broj mobitela: {this.props.data.brojTelefona}
                         </Typography>
                     </Grid>

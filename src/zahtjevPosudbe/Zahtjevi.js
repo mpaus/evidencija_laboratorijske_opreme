@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import Card from '@material-ui/core/Card';
 import Composer from 'react-composer';
 import {Query,Mutation} from 'react-apollo';
-import { UREDAJ_QUERY } from './apollo/queries';
+import { UREDAJ_QUERY } from '../apollo/queries';
 import MaterialTable from 'material-table';
-import Uredaj from './Uredaj';
+import Uredaj from '../oprema/Uredaj';
 import ZahtjevInfo from './ZahtjevInfo';
 import CreateZahtjev from './CreateZahtjev';
-import { ZAHTJEV_QUERY, SPECIFIC_ZAHTJEV_QUERY } from './apollo/queries';
+import { ZAHTJEV_QUERY, SPECIFIC_ZAHTJEV_QUERY } from '../apollo/queries';
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import {Typography} from "@material-ui/core";
 
 export class Zahtjevi extends Component {
 
@@ -34,9 +35,8 @@ export class Zahtjevi extends Component {
                         (<Query query={ZAHTJEV_QUERY}>
                             {
                                 ({loading, error, data}) => {
-                                    if (loading) return <h4>Loading</h4>;
-                                    if (error) console.log(error);
-                                    console.log(data);
+                                    if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                    if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                     const tableRows = [];
                                     data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
                                         console.log(zahtjevPosudbe.stanje);
@@ -45,7 +45,7 @@ export class Zahtjevi extends Component {
                                             uredaj: zahtjevPosudbe.uredaj.nazivUredaja,
                                             brojZahtjeva: zahtjevPosudbe.id,
                                             datum: `${zahtjevPosudbe.pocetakPosudbe} - ${zahtjevPosudbe.krajPosudbe}`,
-                                            stanje: zahtjevPosudbe.stanje.id === '2' ? 'Novi zahtjev' : (zahtjevPosudbe.stanje.id === '3' ? 'Posuđeno' : 'Odbijeno')
+                                            stanje: zahtjevPosudbe.stanje.nazivStanja
                                         })
                                     });
                                     return (<MaterialTable
@@ -73,12 +73,11 @@ export class Zahtjevi extends Component {
                         </Query>)
                         :
                         this.state.prikaz === 'odobreniZahtjevi' ?
-                            (<Query query={SPECIFIC_ZAHTJEV_QUERY} variables={{ stanjeId: 3 }}>
+                            (<Query query={SPECIFIC_ZAHTJEV_QUERY} variables={{ stanjeId: 12 }}>
                                 {
                                     ({loading, error, data}) => {
-                                        if (loading) return <h4>Loading</h4>;
-                                        if (error) console.log(error);
-                                        console.log(data);
+                                        if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                        if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                         const tableRows = [];
                                         data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
                                             console.log(zahtjevPosudbe.stanje);
@@ -87,7 +86,7 @@ export class Zahtjevi extends Component {
                                                 uredaj: zahtjevPosudbe.uredaj.nazivUredaja,
                                                 brojZahtjeva: zahtjevPosudbe.id,
                                                 datum: `${zahtjevPosudbe.pocetakPosudbe} - ${zahtjevPosudbe.krajPosudbe}`,
-                                                stanje: zahtjevPosudbe.stanje.id === '2' ? 'Novi zahtjev' : (zahtjevPosudbe.stanje.id === '3' ? 'Posuđeno' : 'Odbijeno')
+                                                stanje: zahtjevPosudbe.stanje.nazivStanja
                                             })
                                         });
                                         return (<MaterialTable
@@ -114,12 +113,11 @@ export class Zahtjevi extends Component {
                                 }
                             </Query>)
                             :
-                            (<Query query={SPECIFIC_ZAHTJEV_QUERY} variables={{ stanjeId: 2 }}>
+                            (<Query query={SPECIFIC_ZAHTJEV_QUERY} variables={{ stanjeId: 11 }}>
                                 {
                                     ({loading, error, data}) => {
-                                        if (loading) return <h4>Loading</h4>;
-                                        if (error) console.log(error);
-                                        console.log(data);
+                                        if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
+                                        if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                         const tableRows = [];
                                         data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
                                             console.log(zahtjevPosudbe.stanje);
@@ -128,7 +126,7 @@ export class Zahtjevi extends Component {
                                                 uredaj: zahtjevPosudbe.uredaj.nazivUredaja,
                                                 brojZahtjeva: zahtjevPosudbe.id,
                                                 datum: `${zahtjevPosudbe.pocetakPosudbe} - ${zahtjevPosudbe.krajPosudbe}`,
-                                                stanje: zahtjevPosudbe.stanje.id === '2' ? 'Novi zahtjev' : (zahtjevPosudbe.stanje.id === '3' ? 'Posuđeno' : 'Odbijeno')
+                                                stanje: zahtjevPosudbe.stanje.nazivStanja
                                             })
                                         });
                                         return (<MaterialTable

@@ -43,7 +43,6 @@ export class Korisnici extends Component {
                             ({loading, error, data}) => {
                                 if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;
                                 if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
-                                console.log(data, 'STUDENTI');
                                 const tableRows = [];
                                 data && data.korisnik && data.korisnik.forEach((korisnik) => {
                                     tableRows.push({

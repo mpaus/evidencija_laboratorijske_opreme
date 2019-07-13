@@ -26,8 +26,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
-import MaterialTable from "material-table";
-import Korisnik from "../korisnik/Korisnik";
 import KorisnikInfo from '../korisnik/KorisnikInfo';
 
 const styles = theme => ({

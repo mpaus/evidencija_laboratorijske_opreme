@@ -18,8 +18,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVertOutlined';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { MainListItems } from './listItems';
 import Korisnici from '../korisnik/Korisnici';
-import Oprema from '../Oprema';
-import Zahtjevi from '../Zahtjevi';
+import Oprema from '../oprema/Oprema';
+import Zahtjevi from '../zahtjevPosudbe/Zahtjevi';
 import { Route, withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import AuthContext from '../context/authContext';
@@ -113,7 +113,7 @@ class Dashboard extends React.Component {
     this.state = {
       open: false,
       menuOpen: false,
-      menuAnchor: false
+      menuAnchor: null
     };
 
   }
