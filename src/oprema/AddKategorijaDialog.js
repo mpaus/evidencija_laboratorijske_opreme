@@ -2,14 +2,13 @@ import React  from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import { Mutation } from 'react-apollo';
 import {KATEGORIJA_QUERY} from '../apollo/queries';
 import {CREATE_KATEGORIJA} from '../apollo/mutations';
+import { withSnackbar } from 'notistack';
 
 class AddKategorijaDialog extends React.Component {
 
@@ -28,9 +27,9 @@ class AddKategorijaDialog extends React.Component {
     }
 
     updateCache = (cache, { data: { CreateKategorija }}) => {
-        const { kategorija} = cache.readQuery({ query: KATEGORIJA_QUERY });
+        this.props.enqueueSnackbar('Kategorija je kreirana', { variant: 'success' });
 
-        console.log(kategorija, CreateKategorija);
+        const { kategorija} = cache.readQuery({ query: KATEGORIJA_QUERY });
 
         cache.writeQuery({
             query: KATEGORIJA_QUERY,
@@ -43,14 +42,12 @@ class AddKategorijaDialog extends React.Component {
     };
 
     handleChange = name => ({ target: element }) => {
-        console.log(element.value, '---VALUE', name, '---NAME');
         this.setState({
             [name] : element.value
         })
     };
 
     render(){
-        console.log(this.state.nazivKategorije)
         return (
             <Dialog
                 open={this.state.open}
@@ -83,7 +80,10 @@ class AddKategorijaDialog extends React.Component {
                                     color="primary"
                                     variant="contained"
                                     style={{ marginLeft: '0px' }}
-                                    onClick={() => createKategorija({ variables: { input: this.state.nazivKategorije }})}
+                                    onClick={() => {
+                                        this.props.enqueueSnackbar('Kreiranje kategorije je u tijeku', { variant: 'default' });
+                                        return createKategorija({ variables: { input: this.state.nazivKategorije }})
+                                    }}
                                 >
                                     Spremi kategoriju
                                 </Button>
@@ -97,4 +97,4 @@ class AddKategorijaDialog extends React.Component {
     }
 }
 
-export default AddKategorijaDialog;
+export default withSnackbar(AddKategorijaDialog);

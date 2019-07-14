@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 import Card from '@material-ui/core/Card';
-import Composer from 'react-composer';
-import {Query,Mutation} from 'react-apollo';
-import { UREDAJ_QUERY } from '../apollo/queries';
+import {Query} from 'react-apollo';
 import MaterialTable from 'material-table';
-import Uredaj from '../oprema/Uredaj';
 import ZahtjevInfo from './ZahtjevInfo';
-import CreateZahtjev from './CreateZahtjev';
 import { ZAHTJEV_QUERY, SPECIFIC_ZAHTJEV_QUERY } from '../apollo/queries';
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
@@ -39,7 +35,6 @@ export class Zahtjevi extends Component {
                                     if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                     const tableRows = [];
                                     data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
-                                        console.log(zahtjevPosudbe.stanje);
                                         tableRows.push({
                                             student: `${zahtjevPosudbe.korisnik.ime} ${zahtjevPosudbe.korisnik.prezime}`,
                                             uredaj: zahtjevPosudbe.uredaj.nazivUredaja,
@@ -80,7 +75,6 @@ export class Zahtjevi extends Component {
                                         if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                         const tableRows = [];
                                         data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
-                                            console.log(zahtjevPosudbe.stanje);
                                             tableRows.push({
                                                 student: `${zahtjevPosudbe.korisnik.ime} ${zahtjevPosudbe.korisnik.prezime}`,
                                                 uredaj: zahtjevPosudbe.uredaj.nazivUredaja,
@@ -120,7 +114,6 @@ export class Zahtjevi extends Component {
                                         if (error) return <Typography style={{ padding: '5px' }}>{error}</Typography>;
                                         const tableRows = [];
                                         data && data.zahtjevPosudbe && data.zahtjevPosudbe.forEach((zahtjevPosudbe) => {
-                                            console.log(zahtjevPosudbe.stanje);
                                             tableRows.push({
                                                 student: `${zahtjevPosudbe.korisnik.ime} ${zahtjevPosudbe.korisnik.prezime}`,
                                                 uredaj: zahtjevPosudbe.uredaj.nazivUredaja,

@@ -56,7 +56,6 @@ export class Oprema extends Component {
     };
 
     render() {
-        console.log(this.state);
         return (
             <Card>
                     <Tabs value={this.state.prikaz} onChange={(e, value) => this.setState({ prikaz: value })}>

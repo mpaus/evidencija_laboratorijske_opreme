@@ -6,7 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import { DELETE_KORISNIK }from '../apollo/mutations';
-import {KORISNIK_QUERY, UREDAJ_QUERY} from "../apollo/queries";
+import {KORISNIK_QUERY} from "../apollo/queries";
+import { withSnackbar } from 'notistack';
 
 class DeleteKorisnik extends React.Component {
 
@@ -25,6 +26,9 @@ class DeleteKorisnik extends React.Component {
     }
 
     updateCache = (cache, { data : { DeleteKorisnik: { id }}}) => {
+
+        this.props.enqueueSnackbar('Korisnik je izbrisan', { variant: 'success' });
+
         const {korisnik} = cache.readQuery({
             query: KORISNIK_QUERY,
             variables: { ulogaId: parseInt(this.props.deleteKorisnikUlogaId) }
@@ -63,7 +67,10 @@ class DeleteKorisnik extends React.Component {
                         Povratak
                     </Button>
                     <Button
-                        onClick={() => deleteKorisnik({ variables: { input: this.props.deleteKorisnikId }})}
+                        onClick={() => {
+                            this.props.enqueueSnackbar('Brisanje korisnika je u tijeku', { variant: 'default' });
+                            return deleteKorisnik({ variables: { input: this.props.deleteKorisnikId }})
+                        }}
                         color="primary"
                     >
                         Izbriši
@@ -77,4 +84,4 @@ class DeleteKorisnik extends React.Component {
     }
 }
 
-export default DeleteKorisnik;
+export default withSnackbar(DeleteKorisnik);

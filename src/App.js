@@ -14,6 +14,7 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
+import { SnackbarProvider } from 'notistack';
 
 const client = new ApolloClient({
     link: ApolloLink.from([
@@ -71,7 +72,6 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.state);
         return (
             <ApolloProvider client={client}>
                 <Router>
@@ -86,6 +86,7 @@ class App extends Component {
                     login: this.login,
                     logout: this.logout }}>
                 <div className="container">
+                    <SnackbarProvider maxSnack={5}>
                     <Switch>
                         {!this.state.token && <Redirect from="/" to="/auth" exact />}
                         {this.state.token && <Redirect from="/" to="/dashboard/oprema" exact />}
@@ -97,6 +98,7 @@ class App extends Component {
                         {!this.state.token && <Route path="/kreirajKorisnika" component={CreateKorisnik} />}
                         {this.state.token && <Route path="/azurirajKorisnika" render={(props) => <CreateKorisnik korisnikId={this.state.korisnikId} {...props} />} />}
                     </Switch>
+                    </SnackbarProvider>
                     </div>
                 </AuthContext.Provider>
                 </Router>

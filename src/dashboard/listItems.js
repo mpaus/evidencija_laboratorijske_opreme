@@ -26,7 +26,6 @@ export const MainListItems = withRouter(({ match, history }) => (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-        {console.log(history)}
       <ListItemText
           primary="Korisnici"
       />

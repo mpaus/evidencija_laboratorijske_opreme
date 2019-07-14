@@ -13,6 +13,7 @@ import AuthContext from '../context/authContext';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
+import { withSnackbar } from 'notistack';
 
 class CreateZahtjev extends React.Component {
 
@@ -40,6 +41,9 @@ class CreateZahtjev extends React.Component {
     };
 
     updateCache = () => {
+
+        this.props.enqueueSnackbar('Zahtjev je kreiran', { variant: 'success' });
+
         this.props.client.clearStore();
         this.props.setZahtjevDialogOpen(false);
     };
@@ -109,15 +113,18 @@ class CreateZahtjev extends React.Component {
                                         color="primary"
                                         variant="contained"
                                         style={{ marginLeft: '0px' }}
-                                        onClick={() => createZahtjev({ variables: {
-                                                input: {
-                                                    pocetakPosudbe: this.state.pocetakPosudbe,
-                                                    krajPosudbe: this.state.krajPosudbe,
-                                                    razlogPosudbe: this.state.razlogPosudbe,
-                                                    korisnikId: this.context.korisnikId,
-                                                    uredajId: this.props.data.id
-                                                }
-                                            }})}
+                                        onClick={() => {
+                                            this.props.enqueueSnackbar('Kreiranje zahtjeva je u tijeku', { variant: 'default' });
+                                            return createZahtjev({ variables: {
+                                                    input: {
+                                                        pocetakPosudbe: this.state.pocetakPosudbe,
+                                                        krajPosudbe: this.state.krajPosudbe,
+                                                        razlogPosudbe: this.state.razlogPosudbe,
+                                                        korisnikId: this.context.korisnikId,
+                                                        uredajId: this.props.data.id
+                                                    }
+                                                }})
+                                        }}
                                     >
                                         Pošalji zahtjev
                                     </Button>
@@ -132,4 +139,4 @@ class CreateZahtjev extends React.Component {
     }
 }
 
-export default withApollo(CreateZahtjev);
+export default withApollo(withSnackbar(CreateZahtjev));

@@ -3,12 +3,13 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { Mutation } from 'react-apollo';
-import {KORISNIK_QUERY, SPECIFIC_ZAHTJEV_QUERY, ZAHTJEV_QUERY} from '../apollo/queries';
+import {SPECIFIC_ZAHTJEV_QUERY} from '../apollo/queries';
 import {APROOVE_ZAHTJEV, DECLINE_ZAHTJEV, RETURN_UREDAJ_ZAHTJEV } from '../apollo/mutations';
 import Card from "@material-ui/core/Card";
 import Composer from "react-composer";
 import AuthContext from '../context/authContext';
 import {Typography} from "@material-ui/core";
+import { withSnackbar } from 'notistack';
 
 class ZahtjevInfo extends React.Component {
 
@@ -23,9 +24,10 @@ class ZahtjevInfo extends React.Component {
     static contextType = AuthContext;
 
     updateCacheAproove = (cache, {data:{ AprooveZahtjev }}) => {
-        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 11} });
 
-        console.log(cache, AprooveZahtjev);
+        this.props.enqueueSnackbar('Zahtjev je odobren', { variant: 'success' });
+
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 11} });
 
         cache.writeQuery({
             query: SPECIFIC_ZAHTJEV_QUERY,
@@ -38,9 +40,10 @@ class ZahtjevInfo extends React.Component {
     };
 
     updateCacheDecline = (cache, {data:{ DeclineZahtjev }}) => {
-        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 11} });
 
-        console.log(cache, DeclineZahtjev);
+        this.props.enqueueSnackbar('Zahtjev je odbijen', { variant: 'success' });
+
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 11} });
 
         cache.writeQuery({
             query: SPECIFIC_ZAHTJEV_QUERY,
@@ -52,9 +55,10 @@ class ZahtjevInfo extends React.Component {
     };
 
     updateCacheReturn = (cache, {data:{ ReturnUredajZahtjev }}) => {
-        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 12} });
 
-        console.log(cache, ReturnUredajZahtjev);
+        this.props.enqueueSnackbar('Uređaj je vraćen', { variant: 'success' });
+
+        const { zahtjevPosudbe } = cache.readQuery({ query: SPECIFIC_ZAHTJEV_QUERY, variables: { stanjeId: 12} });
 
         cache.writeQuery({
             query: SPECIFIC_ZAHTJEV_QUERY,
@@ -66,14 +70,12 @@ class ZahtjevInfo extends React.Component {
     };
 
     handleChange = name => ({ target: element }) => {
-        console.log(element.value, '---VALUE', name, '---NAME');
         this.setState({
             [name] : element.value
         })
     };
 
     render(){
-        console.log(this.props.data);
         return (
             <Card>
                 <div style={{ margin: '10px' }}>
@@ -176,7 +178,9 @@ class ZahtjevInfo extends React.Component {
                                 {this.props.data.stanje.id === '11' && (<Button
                                     color="primary"
                                     variant="contained"
-                                onClick={() => declineZahtjev({
+                                onClick={() => {
+                                    this.props.enqueueSnackbar('Odbijanje zahtjeva je u tijeku', { variant: 'default' });
+                                    return declineZahtjev({
                                         variables: {
                                             input: {
                                                 id: this.props.data.id,
@@ -185,7 +189,8 @@ class ZahtjevInfo extends React.Component {
                                                 uredajId: this.props.data.uredaj.id
                                             }
                                         }
-                                    })}
+                                    })
+                                }}
                             >
                                 Odbij zahtjev
                             </Button>)}
@@ -193,26 +198,31 @@ class ZahtjevInfo extends React.Component {
                                         && this.props.data.stanje.id !== '14' && (<Button
                                             color="primary"
                                             variant="contained"
-                                            onClick={() => this.props.data.stanje.id === '12' ?
-                                                returnUredajZahtjev({
-                                                    variables: {
-                                                        input: {
-                                                            id: this.props.data.id,
-                                                            uredajId: this.props.data.uredaj.id
+                                            onClick={() => {
+                                                if (this.props.data.stanje.id === '12') {
+                                                    this.props.enqueueSnackbar('Vraćanje uređaja je u tijeku', { variant: 'default' });
+                                                    return returnUredajZahtjev({
+                                                        variables: {
+                                                            input: {
+                                                                id: this.props.data.id,
+                                                                uredajId: this.props.data.uredaj.id
+                                                            }
                                                         }
-                                                    }
-                                                })
-                                                :
-                                                aprooveZahtjev({
-                                                    variables: {
-                                                        input: {
-                                                            id: this.props.data.id,
-                                                            odobritelj: this.context.korisnikId,
-                                                            napomenaProfesora: this.state.napomenaProfesora,
-                                                            uredajId: this.props.data.uredaj.id
+                                                    });
+                                                } else {
+                                                    this.props.enqueueSnackbar('Potvrđivanje zahtjeva je u tijeku', { variant: 'default' });
+                                                    return aprooveZahtjev({
+                                                        variables: {
+                                                            input: {
+                                                                id: this.props.data.id,
+                                                                odobritelj: this.context.korisnikId,
+                                                                napomenaProfesora: this.state.napomenaProfesora,
+                                                                uredajId: this.props.data.uredaj.id
+                                                            }
                                                         }
-                                                    }
-                                                })
+                                                    })
+                                                }
+                                            }
                                             }
                                         >
                                             {this.props.data.stanje.id === '12' ? 'Vrati uređaj' : 'Potvrdi zahtjev'}
@@ -231,4 +241,4 @@ class ZahtjevInfo extends React.Component {
     }
 }
 
-export default ZahtjevInfo;
+export default withSnackbar(ZahtjevInfo);

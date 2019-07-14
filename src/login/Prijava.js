@@ -20,6 +20,7 @@ import { ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import AuthContext from '../context/authContext';
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     main: {
@@ -89,6 +90,8 @@ class Prijava extends React.Component {
 
         if(this.validateForm(['email','lozinka'])) {
 
+            this.props.enqueueSnackbar('Prijava je u tijeku', { variant: 'default' });
+
             const query = gql`
           query Login($email: String!, $lozinka: String!) {
             login(email: $email, lozinka: $lozinka){
@@ -116,10 +119,14 @@ class Prijava extends React.Component {
                     email: this.state.email,
                     lozinka: this.state.lozinka
                 }
-            }).then(res => res.data.login[0]);
+            }).then(res => {
+                this.props.enqueueSnackbar('Prijava je uspješna', { variant: 'success' });
+                return res.data.login[0]
+            })
+                .catch(err => this.props.enqueueSnackbar(err.message.replace('GraphQL error:', '').trim(),{ variant: 'error'}));
 
 
-            if (login.token) {
+            if (login && login.token) {
                 this.context.login(
                     login.token,
                     login.korisnik.id,
@@ -218,4 +225,4 @@ Prijava.propTypes = {
     history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(withRouter(Prijava));
+export default withStyles(styles)(withRouter(withSnackbar(Prijava)));

@@ -26,6 +26,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
+import { withSnackbar } from 'notistack';
 import KorisnikInfo from '../korisnik/KorisnikInfo';
 
 const styles = theme => ({
@@ -93,6 +94,10 @@ class CreateKorisnik extends React.Component {
         };
     }
 
+    handleError = (err) => {
+       this.props.enqueueSnackbar(err.message.replace('GraphQL error:', '').trim(),{ variant: 'error'})
+    };
+
     update = async () => {
 
         await this.props.client.clearStore();
@@ -125,7 +130,10 @@ class CreateKorisnik extends React.Component {
                 email: this.state.email,
                 lozinka: this.state.lozinka
             }
-        }).then(res => res.data.login[0]);
+        }).then(res => {
+            this.props.enqueueSnackbar('Korisnik je kreiran', { variant: 'success' });
+            return res.data.login[0]
+        });
 
         if(login.token){
             this.context.login(
@@ -193,7 +201,7 @@ return (
                                 return (<KorisnikInfo korisnik={odabraniKorisnik} {...this.props} />);
                             }
                         }
-                    </Query>) : (<Mutation mutation={CREATE_KORISNIK} update={this.update}>
+                    </Query>) : (<Mutation mutation={CREATE_KORISNIK} update={this.update} onError={this.handleError}>
                     {createKorisnik => (
                         <React.Fragment>
                             <form>
@@ -347,15 +355,17 @@ return (
                                     variant="contained"
                                     style={{ marginLeft: '0px' }}
                                     className={classes.button}
-                                    onClick={() => this.validateForm(
-                                        [
-                                            'email',
-                                            'lozinka',
-                                            'maticniBroj',
-                                            'ime',
-                                            'prezime',
-                                            'brojTelefona'
-                                        ])
+                                    onClick={() => {
+                                        this.props.enqueueSnackbar('Kreiranje korisnika je u tijeku', { variant: 'default' });
+                                        return this.validateForm(
+                                            [
+                                                'email',
+                                                'lozinka',
+                                                'maticniBroj',
+                                                'ime',
+                                                'prezime',
+                                                'brojTelefona'
+                                            ])
                                         && createKorisnik({ variables: {
                                                 input: {
                                                     email: this.state.email,
@@ -367,7 +377,8 @@ return (
                                                     ulogaId: this.state.ulogaId,
                                                 },
                                                 file: this.state.slika
-                                            }})}
+                                            }})
+                                    }}
                                 >
                                     Spremi korisnika
                                 </Button>
@@ -390,4 +401,4 @@ CreateKorisnik.propTypes = {
 
 };
 
-export default withStyles(styles)(withApollo(withRouter(CreateKorisnik)));
+export default withStyles(styles)(withApollo(withRouter(withSnackbar(CreateKorisnik))));

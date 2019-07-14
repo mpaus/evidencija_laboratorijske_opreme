@@ -7,6 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import { DELETE_UREDAJ }from '../apollo/mutations';
 import { UREDAJ_QUERY, AVAILABLE_UREDAJ_QUERY} from "../apollo/queries";
+import { withSnackbar } from 'notistack';
 
 class DeleteUredaj extends React.Component {
 
@@ -25,6 +26,9 @@ class DeleteUredaj extends React.Component {
     }
 
     updateCacheDelete = (cache, { data : { DeleteUredaj: { id }}}) => {
+
+        this.props.enqueueSnackbar('Uređaj je izbrisan', { variant: 'success' });
+
         if(this.props.prikaz !== 'dostupniUredaji') {
             const {uredaj} = cache.readQuery({query: UREDAJ_QUERY});
 
@@ -50,7 +54,6 @@ class DeleteUredaj extends React.Component {
     };
 
     render(){
-        console.log(this.props.prikaz);
         return (
             <Dialog
                 open={this.state.open}
@@ -72,7 +75,10 @@ class DeleteUredaj extends React.Component {
                                     Povratak
                                 </Button>
                                 <Button
-                                    onClick={() => deleteUredaj({ variables: { input: this.props.deleteUredajId }})}
+                                    onClick={() => {
+                                        this.props.enqueueSnackbar('Brisanje uređaja je u tijeku', { variant: 'default' });
+                                        return deleteUredaj({ variables: { input: this.props.deleteUredajId }});
+                                    }}
                                     color="primary"
                                 >
                                     Izbriši
@@ -86,4 +92,4 @@ class DeleteUredaj extends React.Component {
     }
 }
 
-export default DeleteUredaj;
+export default withSnackbar(DeleteUredaj);

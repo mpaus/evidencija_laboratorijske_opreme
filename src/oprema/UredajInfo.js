@@ -20,6 +20,7 @@ import AddKategorijaDialog from './AddKategorijaDialog';
 import Composer from "react-composer";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from "@material-ui/core/Typography";
+import { withSnackbar } from 'notistack';
 
 class UredajInfo extends React.Component {
 
@@ -62,22 +63,24 @@ class UredajInfo extends React.Component {
 
     handleImageChange = (e) => {
         const file = e.target.files[0];
-        console.log(file);
         this.setState({ slika: file });
     };
 
     handleChange = name => ({ target: element }) => {
-        console.log(element.value, '---VALUE', name, '---NAME');
         this.setState({
             [name] : element.value
         })
     };
 
+    handleError = (err) => {
+        this.props.enqueueSnackbar(err.message.replace('GraphQL error:', '').trim(),{ variant: 'error'})
+    };
+
     updateCache = (cache, { data: { CreateUredaj }}) => {
+        this.props.enqueueSnackbar('Uređaj je kreiran', { variant: 'success' });
+
         if(this.props.prikaz !== 'dostupniUredaji') {
             const {uredaj} = cache.readQuery({query: UREDAJ_QUERY});
-
-            console.log(uredaj, CreateUredaj);
 
             cache.writeQuery({
                 query: UREDAJ_QUERY,
@@ -101,6 +104,8 @@ class UredajInfo extends React.Component {
     };
 
     updateCacheUpdate = (cache, { data: { UpdateUredaj }}) => {
+        this.props.enqueueSnackbar('Uređaj je ažuriran', { variant: 'success' });
+
         if(this.props.prikaz !== 'dostupniUredaji') {
             const {uredaj} = cache.readQuery({query: UREDAJ_QUERY});
 
@@ -135,8 +140,8 @@ class UredajInfo extends React.Component {
                     <DialogContent>
                         <Composer
                             components={[
-                                <Mutation mutation={CREATE_UREDAJ} update={this.updateCache}>{() => {}}</Mutation>,
-                                <Mutation mutation={UPDATE_UREDAJ} update={this.updateCacheUpdate}>{() => {}}</Mutation>
+                                <Mutation mutation={CREATE_UREDAJ} update={this.updateCache} onError={this.handleError}>{() => {}}</Mutation>,
+                                <Mutation mutation={UPDATE_UREDAJ} update={this.updateCacheUpdate} onError={this.handleError}>{() => {}}</Mutation>
                             ]}
                         >
                         {([createUredaj, updateUredaj]) => (
@@ -274,31 +279,40 @@ class UredajInfo extends React.Component {
                                 <Button
                                     color="primary"
                                     variant="contained"
-                                    onClick={() => this.props.uredajInfo ?
-                                        updateUredaj({ variables: {
-                                                input: {
-                                                    id: this.props.uredajInfo && this.props.uredajInfo.id,
-                                                    nazivUredaja: this.state.nazivUredaja,
-                                                    serijskiBroj: this.state.serijskiBroj,
-                                                    cijena: this.state.cijena,
-                                                    napomena: this.state.napomena,
-                                                    specifikacije: this.state.specifikacije,
-                                                    kategorijaId: this.state.kategorijaId,
-                                                },
-                                                file: this.state.slika
-                                            }})
-                                        :
-                                        createUredaj({ variables: {
-                                            input: {
-                                                nazivUredaja: this.state.nazivUredaja,
-                                                serijskiBroj: this.state.serijskiBroj,
-                                                cijena: this.state.cijena,
-                                                napomena: this.state.napomena,
-                                                specifikacije: this.state.specifikacije,
-                                                kategorijaId: this.state.kategorijaId,
-                                            },
-                                            file: this.state.slika
-                                        }})}
+                                    onClick={() => {
+                                        if(this.props.uredajInfo) {
+                                            this.props.enqueueSnackbar('Ažuriranje uređaja je u tijeku', { variant: 'default' });
+                                            return updateUredaj({
+                                                variables: {
+                                                    input: {
+                                                        id: this.props.uredajInfo && this.props.uredajInfo.id,
+                                                        nazivUredaja: this.state.nazivUredaja,
+                                                        serijskiBroj: this.state.serijskiBroj,
+                                                        cijena: this.state.cijena,
+                                                        napomena: this.state.napomena,
+                                                        specifikacije: this.state.specifikacije,
+                                                        kategorijaId: this.state.kategorijaId,
+                                                    },
+                                                    file: this.state.slika
+                                                }
+                                            })
+                                        } else {
+                                            this.props.enqueueSnackbar('Kreiranje uređaja je u tijeku', { variant: 'default' });
+                                            return createUredaj({
+                                                variables: {
+                                                    input: {
+                                                        nazivUredaja: this.state.nazivUredaja,
+                                                        serijskiBroj: this.state.serijskiBroj,
+                                                        cijena: this.state.cijena,
+                                                        napomena: this.state.napomena,
+                                                        specifikacije: this.state.specifikacije,
+                                                        kategorijaId: this.state.kategorijaId,
+                                                    },
+                                                    file: this.state.slika
+                                                }
+                                            })
+                                        }
+                                    }}
                                 >
                                     {this.props.uredajInfo ? 'Ažuriraj uređaj' : 'Spremi uređaj'}
                                 </Button>
@@ -317,4 +331,4 @@ class UredajInfo extends React.Component {
     }
 }
 
-export default UredajInfo;
+export default withSnackbar(UredajInfo);

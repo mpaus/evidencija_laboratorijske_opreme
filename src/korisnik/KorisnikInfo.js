@@ -1,33 +1,23 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import gql from 'graphql-tag';
 import Radio from '@material-ui/core/Radio';
-import withStyles from '@material-ui/core/styles/withStyles';
 import {Query, Mutation} from "react-apollo";
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import AuthContext from '../context/authContext';
-import {ULOGA_KORISNIKA, SPECIFIC_KORISNIK_QUERY, UREDAJ_QUERY, KORISNIK_QUERY} from '../apollo/queries';
+import {ULOGA_KORISNIKA} from '../apollo/queries';
 import { UPDATE_KORISNIK} from '../apollo/mutations';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
-import MaterialTable from "material-table";
-import Korisnik from "../korisnik/Korisnik";
+import { withSnackbar } from 'notistack';
 
 class KorisnikInfo extends React.Component {
 
@@ -73,13 +63,17 @@ class KorisnikInfo extends React.Component {
         return !error;
     };
 
+    handleError = (err) => {
+        this.props.enqueueSnackbar(err.message.replace('GraphQL error:', '').trim(),{ variant: 'error'})
+    };
+
     update = (cache, { data: { UpdateKorisnik }}) => {
+
+        this.props.enqueueSnackbar('Korisnik je kreiran', { variant: 'success' });
 
         localStorage.setItem('korisnikIme', UpdateKorisnik.ime);
         localStorage.setItem('korisnikPrezime', UpdateKorisnik.prezime);
         localStorage.setItem('slikaUrl', UpdateKorisnik.slikaUrl);
-
-        console.log(UpdateKorisnik,);
 
         this.props.history.push('/dashboard/oprema');
     };
@@ -87,7 +81,7 @@ class KorisnikInfo extends React.Component {
     render() {
         const { classes } = this.props;
 
-        return (<Mutation mutation={UPDATE_KORISNIK} update={this.update}>
+        return (<Mutation mutation={UPDATE_KORISNIK} update={this.update} onError={this.handleError}>
             {updateKorisnik => (
                 <React.Fragment>
                     <form>
@@ -220,13 +214,15 @@ class KorisnikInfo extends React.Component {
                             variant="contained"
                             style={{ marginLeft: '0px' }}
                             className={classes.button}
-                            onClick={() => this.validateForm(
-                                [
-                                    'maticniBroj',
-                                    'ime',
-                                    'prezime',
-                                    'brojTelefona'
-                                ])
+                            onClick={() => {
+                                this.props.enqueueSnackbar('Ažuriranje korisnika je u tijeku', { variant: 'default' });
+                                return this.validateForm(
+                                    [
+                                        'maticniBroj',
+                                        'ime',
+                                        'prezime',
+                                        'brojTelefona'
+                                    ])
                                 && updateKorisnik({ variables: {
                                         input: {
                                             id: this.props.korisnik.id,
@@ -236,7 +232,8 @@ class KorisnikInfo extends React.Component {
                                             brojTelefona: this.state.brojTelefona,
                                         },
                                         file: this.state.slika
-                                    }})}
+                                    }})
+                            }}
                         >
                             Spremi korisnika
                         </Button>
@@ -254,4 +251,4 @@ KorisnikInfo.propTypes = {
 
 };
 
-export default withApollo(withRouter(KorisnikInfo));
+export default withApollo(withRouter(withSnackbar(KorisnikInfo)));
