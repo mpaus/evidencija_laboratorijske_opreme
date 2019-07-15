@@ -3,8 +3,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Card from "@material-ui/core/Card";
 import {Typography} from "@material-ui/core";
+import AuthContext from '../context/authContext';
 
 class Uredaj extends React.Component {
+
+    static contextType = AuthContext;
 
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({ open: nextProps.open });
@@ -50,7 +53,7 @@ class Uredaj extends React.Component {
                                 Napomena: {this.props.data.napomena}
                             </Typography>
                         </Grid>
-                            <Grid item xs={3}>
+                        {this.context.korisnikUlogaId === '1' && (<Grid item xs={3}>
                             <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', width: '100%', height: '100%'}}>
                             <Button
                                 color="primary"
@@ -65,7 +68,7 @@ class Uredaj extends React.Component {
                                 Zatraži uređaj
                             </Button>
                             </div>
-                            </Grid>
+                            </Grid>)}
                     </Grid>
                 </div>
             </Card>

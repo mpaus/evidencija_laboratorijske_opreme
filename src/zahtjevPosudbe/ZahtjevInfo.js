@@ -156,12 +156,10 @@ class ZahtjevInfo extends React.Component {
                             >
                                 {([aprooveZahtjev, declineZahtjev, returnUredajZahtjev]) => (
                             <React.Fragment>
-                                {(this.props.data.stanje.id === '12' && this.props.data.napomenaProfesora)
-                                || (this.props.data.stanje.id === '13' && this.props.data.napomenaProfesora)
-                                || (this.props.data.stanje.id === '14' && this.props.data.napomenaProfesora) ?
+                                {this.props.data.stanje.id === '12' || this.props.data.stanje.id === '13' || this.props.data.stanje.id === '14' ?
                                     (<div>
                                         <Typography>
-                                            Napomena profesora: {this.props.data.napomenaProfesora}
+                                            Napomena profesora: {this.props.data.napomenaProfesora || '/'}
                                         </Typography>
                                     </div>)
                                     :
@@ -175,7 +173,7 @@ class ZahtjevInfo extends React.Component {
                                     />)}
                                 <Grid item xs={12}>
                                     <div style={{ display: 'flex', justifyContent: this.props.data.stanje.id === '12' ? 'flex-end' : 'space-between', marginTop: '20px' }}>
-                                {this.props.data.stanje.id === '11' && (<Button
+                                {this.props.data.stanje.id === '11' && this.context.korisnikUlogaId === '2' && (<Button
                                     color="primary"
                                     variant="contained"
                                 onClick={() => {
@@ -195,7 +193,7 @@ class ZahtjevInfo extends React.Component {
                                 Odbij zahtjev
                             </Button>)}
                                         {this.props.data.stanje.id !== '13'
-                                        && this.props.data.stanje.id !== '14' && (<Button
+                                        && this.props.data.stanje.id !== '14' && this.context.korisnikUlogaId === '2' && (<Button
                                             color="primary"
                                             variant="contained"
                                             onClick={() => {

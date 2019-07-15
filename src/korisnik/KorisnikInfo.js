@@ -18,6 +18,7 @@ import Input from '@material-ui/core/Input';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
 import { withSnackbar } from 'notistack';
+import DeleteKorisnik from "./DeleteKorisnik";
 
 class KorisnikInfo extends React.Component {
 
@@ -36,8 +37,17 @@ class KorisnikInfo extends React.Component {
             prezimeError: false,
             brojTelefonaError: false,
             slika: null,
+            dialogOpen: false
         };
+
+        this.updateDialogOpenState = this.updateDialogOpenState.bind(this);
     }
+
+    updateDialogOpenState = (state) => {
+        this.setState({
+            dialogOpen: state
+        })
+    };
 
     handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -54,8 +64,8 @@ class KorisnikInfo extends React.Component {
         let error = false;
 
         formData.forEach(data => {
-            this.setState({[`${data}Error`]: this.state[data] === '' });
-            if(this.state[data] === ''){
+            this.setState({[`${data}Error`]: this.state[data] === '' || this.state[data] === null });
+            if(this.state[data] === '' || this.state[data] === null){
                 error = true;
             }
         });
@@ -209,10 +219,20 @@ class KorisnikInfo extends React.Component {
                         >
                             Povratak
                         </Button>
+                        <div>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                style={{ marginLeft: '0px' }}
+                                className={classes.button}
+                                onClick={() => this.setState({ deleteKorisnikDialogOpen: true })}
+                            >
+                                Izbriši račun
+                            </Button>
                         <Button
                             color="primary"
                             variant="contained"
-                            style={{ marginLeft: '0px' }}
+                            style={{ marginLeft: '5px' }}
                             className={classes.button}
                             onClick={() => {
                                 this.props.enqueueSnackbar('Ažuriranje korisnika je u tijeku', { variant: 'default' });
@@ -235,8 +255,16 @@ class KorisnikInfo extends React.Component {
                                     }})
                             }}
                         >
-                            Spremi korisnika
+                            Ažuriraj račun
                         </Button>
+                        </div>
+                        <DeleteKorisnik
+                            open={this.state.deleteKorisnikDialogOpen}
+                            profesorDelete={false}
+                            updateDialogOpenState={this.updateDialogOpenState}
+                            deleteKorisnikId={this.context.korisnikId}
+                            deleteKorisnikUlogaId={this.context.korisnikUlogaId}
+                        />
                     </div>
                 </React.Fragment>
             )}

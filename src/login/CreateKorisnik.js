@@ -163,8 +163,8 @@ class CreateKorisnik extends React.Component {
         let error = false;
 
         formData.forEach(data => {
-            this.setState({[`${data}Error`]: this.state[data] === '' });
-            if(this.state[data] === ''){
+            this.setState({[`${data}Error`]: this.state[data] === '' || this.state[data] === null });
+            if(this.state[data] === '' || this.state[data] === null){
                 error = true;
             }
         });

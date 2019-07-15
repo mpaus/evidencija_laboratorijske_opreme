@@ -10,7 +10,11 @@ import UredajInfo from './UredajInfo';
 import CreateZahtjev from '../zahtjevPosudbe/CreateZahtjev';
 import {Typography} from "@material-ui/core";
 import DeleteUredaj from './DeleteUredaj';
+import AuthContext from '../context/authContext';
+
 export class Oprema extends Component {
+
+    static contextType = AuthContext;
 
     constructor(props) {
         super(props);
@@ -77,7 +81,7 @@ export class Oprema extends Component {
                                         stanje: uredaj.stanje && uredaj.stanje.nazivStanja
                                     })
                                 });
-                                return (<MaterialTable
+                                return this.context.korisnikUlogaId === '2' ? (<MaterialTable
                                     columns={[
                                         {title: "Serijski broj", field: "serijskiBroj"},
                                         {title: "Naziv uređaja", field: "nazivUredaja"},
@@ -123,6 +127,25 @@ export class Oprema extends Component {
                                     options={{
                                         actionsColumnIndex: -1
                                     }}
+                                />) : (<MaterialTable
+                                    columns={[
+                                        {title: "Serijski broj", field: "serijskiBroj"},
+                                        {title: "Naziv uređaja", field: "nazivUredaja"},
+                                        {title: "Kategorija", field: "kategorija"},
+                                        {title: "Stanje", field: "stanje"}
+                                    ]}
+                                    data={tableRows}
+                                    title="Oprema"
+                                    detailPanel={rowData => {
+                                        const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
+                                        return (
+                                            <Uredaj
+                                                data={odabraniUredaj[0]}
+                                                zahtjevState={this.updateZahtjevState}
+                                            >
+                                            </Uredaj>
+                                        )
+                                    }}
                                 />);
                             }
                         }
@@ -142,7 +165,7 @@ export class Oprema extends Component {
                                                 stanje: uredaj.stanje && uredaj.stanje.nazivStanja
                                             })
                                         });
-                                        return (<MaterialTable
+                                        return this.context.korisnikUlogaId === '2' ? (<MaterialTable
                                             columns={[
                                                 {title: "Serijski broj", field: "serijskiBroj"},
                                                 {title: "Naziv uređaja", field: "nazivUredaja"},
@@ -188,6 +211,25 @@ export class Oprema extends Component {
                                             ]}
                                             options={{
                                                 actionsColumnIndex: -1
+                                            }}
+                                        />) : (<MaterialTable
+                                            columns={[
+                                                {title: "Serijski broj", field: "serijskiBroj"},
+                                                {title: "Naziv uređaja", field: "nazivUredaja"},
+                                                {title: "Kategorija", field: "kategorija"},
+                                                {title: "Stanje", field: "stanje"}
+                                            ]}
+                                            data={tableRows}
+                                            title="Oprema"
+                                            detailPanel={rowData => {
+                                                const odabraniUredaj = data.uredaj.filter(uredaj => uredaj.serijskiBroj === rowData.serijskiBroj);
+                                                return (
+                                                    <Uredaj
+                                                        data={odabraniUredaj[0]}
+                                                        zahtjevState={this.updateZahtjevState}
+                                                    >
+                                                    </Uredaj>
+                                                )
                                             }}
                                         />);
                                     }

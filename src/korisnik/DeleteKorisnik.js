@@ -7,9 +7,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import { DELETE_KORISNIK }from '../apollo/mutations';
 import {KORISNIK_QUERY} from "../apollo/queries";
+import { withRouter } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
+import AuthContext from '../context/authContext';
 
 class DeleteKorisnik extends React.Component {
+
+    static contextType = AuthContext;
 
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({
@@ -29,20 +33,26 @@ class DeleteKorisnik extends React.Component {
 
         this.props.enqueueSnackbar('Korisnik je izbrisan', { variant: 'success' });
 
-        const {korisnik} = cache.readQuery({
-            query: KORISNIK_QUERY,
-            variables: { ulogaId: parseInt(this.props.deleteKorisnikUlogaId) }
-        });
+        if(this.props.profesorDelete) {
+            const {korisnik} = cache.readQuery({
+                query: KORISNIK_QUERY,
+                variables: {ulogaId: parseInt(this.props.deleteKorisnikUlogaId)}
+            });
 
-        cache.writeQuery({
-            query: KORISNIK_QUERY,
-            variables: { ulogaId: parseInt(this.props.deleteKorisnikUlogaId) },
-            data: {
-                korisnik: korisnik.filter(korisnik => korisnik.id !== id)
-            }
-        });
+            cache.writeQuery({
+                query: KORISNIK_QUERY,
+                variables: {ulogaId: parseInt(this.props.deleteKorisnikUlogaId)},
+                data: {
+                    korisnik: korisnik.filter(korisnik => korisnik.id !== id)
+                }
+            });
 
-        this.props.updateDialogOpenState(false);
+            this.props.updateDialogOpenState(false);
+        } else {
+            console.log('tu san');
+            this.context.logout();
+            this.props.history.push('/auth');
+        }
     };
 
     render(){
@@ -84,4 +94,4 @@ class DeleteKorisnik extends React.Component {
     }
 }
 
-export default withSnackbar(DeleteKorisnik);
+export default withRouter(withSnackbar(DeleteKorisnik));

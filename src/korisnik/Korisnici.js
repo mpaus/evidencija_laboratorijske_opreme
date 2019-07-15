@@ -8,8 +8,11 @@ import Tabs from "@material-ui/core/Tabs";
 import MaterialTable from "material-table";
 import {Typography} from "@material-ui/core";
 import DeleteKorisnik from "./DeleteKorisnik";
+import AuthContext from '../context/authContext';
 
 export class Korisnici extends Component {
+
+    static contextType = AuthContext;
 
     constructor(props) {
         super(props);
@@ -51,7 +54,7 @@ export class Korisnici extends Component {
                                         uloga: korisnik.uloga && korisnik.uloga.nazivUloge,
                                     })
                                 });
-                                return (<MaterialTable
+                                return this.context.korisnikUlogaId === '2' ? (<MaterialTable
                                     columns={[
                                         {title: "Matični broj", field: "maticniBroj"},
                                         {title: "Ime i prezime", field: "imeIPrezime"},
@@ -83,6 +86,22 @@ export class Korisnici extends Component {
                                     ]}
                                     options={{
                                         actionsColumnIndex: -1
+                                    }}
+                                />) : (<MaterialTable
+                                    columns={[
+                                        {title: "Matični broj", field: "maticniBroj"},
+                                        {title: "Ime i prezime", field: "imeIPrezime"},
+                                        {title: "Uloga", field: "uloga"},
+                                    ]}
+                                    data={tableRows}
+                                    title="STUDENTI"
+                                    detailPanel={rowData => {
+                                        const odabraniStudent = data.korisnik.filter(korisnik => korisnik.maticniBroj === rowData.maticniBroj);
+                                        return (
+                                            <Korisnik
+                                                data={odabraniStudent[0]}
+                                            />
+                                        )
                                     }}
                                 />);
                             }
@@ -124,6 +143,7 @@ export class Korisnici extends Component {
                     </Query>)}
                     <DeleteKorisnik
                         open={this.state.dialogOpen}
+                        profesorDelete={true}
                         updateDialogOpenState={this.updateDialogOpenState}
                         deleteKorisnikId={this.state.deleteKorisnikId}
                         deleteKorisnikUlogaId={this.state.deleteKorisnikUlogaId}

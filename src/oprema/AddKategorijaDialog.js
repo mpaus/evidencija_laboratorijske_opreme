@@ -4,11 +4,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { Mutation } from 'react-apollo';
 import {KATEGORIJA_QUERY} from '../apollo/queries';
 import {CREATE_KATEGORIJA} from '../apollo/mutations';
 import { withSnackbar } from 'notistack';
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
 
 class AddKategorijaDialog extends React.Component {
 
@@ -23,6 +26,7 @@ class AddKategorijaDialog extends React.Component {
             open: false,
             update: false,
             nazivKategorije: '',
+            nazivKategorijeError: false
         };
     }
 
@@ -44,7 +48,20 @@ class AddKategorijaDialog extends React.Component {
     handleChange = name => ({ target: element }) => {
         this.setState({
             [name] : element.value
-        })
+        }, () => this.validateForm([name]));
+    };
+
+    validateForm = (formData) => {
+        let error = false;
+
+        formData.forEach(data => {
+            this.setState({[`${data}Error`]: this.state[data] === '' || this.state[data] === null });
+            if(this.state[data] === '' || this.state[data] === null){
+                error = true;
+            }
+        });
+
+        return !error;
     };
 
     render(){
@@ -55,16 +72,20 @@ class AddKategorijaDialog extends React.Component {
             >
                 <DialogTitle id="responsive-dialog-title">Unesite kategoriju</DialogTitle>
                 <DialogContent>
-                    <TextField
+                    <FormControl required fullWidth>
+                        <InputLabel htmlFor="nazivKategorije">Naziv kategorije</InputLabel>
+                        <Input
                         autoFocus
                         margin="dense"
+                        error={this.state.nazivKategorijeError}
                         id="nazivKategorije"
-                        label="Naziv kategorije"
                         type="nazivKategorije"
                         onChange={this.handleChange('nazivKategorije')}
                         fullWidth
                     />
-                </DialogContent>
+                    {this.state.nazivKategorijeError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                    </FormControl>
+                    </DialogContent>
                 <DialogActions>
                     <Mutation mutation={CREATE_KATEGORIJA} update={this.updateCache}>
                         {createKategorija => (
@@ -81,8 +102,10 @@ class AddKategorijaDialog extends React.Component {
                                     variant="contained"
                                     style={{ marginLeft: '0px' }}
                                     onClick={() => {
-                                        this.props.enqueueSnackbar('Kreiranje kategorije je u tijeku', { variant: 'default' });
-                                        return createKategorija({ variables: { input: this.state.nazivKategorije }})
+                                        if(this.validateForm(['nazivKategorije'])) {
+                                            this.props.enqueueSnackbar('Kreiranje kategorije je u tijeku', {variant: 'default'});
+                                            return createKategorija({variables: {input: this.state.nazivKategorije}})
+                                        }
                                     }}
                                 >
                                     Spremi kategoriju

@@ -87,6 +87,9 @@ export const CREATE_ZAHTJEV = gql`
     pocetakPosudbe
     krajPosudbe
     razlogPosudbe
+    uredaj{
+        id
+    }
     odobritelj{
       id
       email

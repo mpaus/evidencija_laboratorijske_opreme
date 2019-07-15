@@ -8,12 +8,16 @@ import {Mutation} from 'react-apollo';
 import { withApollo } from 'react-apollo';
 import { CREATE_ZAHTJEV } from '../apollo/mutations';
 import FormGroup from "@material-ui/core/FormGroup";
-import TextField from "@material-ui/core/TextField";
+import Input from '@material-ui/core/Input';
 import AuthContext from '../context/authContext';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
 import { withSnackbar } from 'notistack';
+import {AVAILABLE_UREDAJ_QUERY} from '../apollo/queries';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 class CreateZahtjev extends React.Component {
 
@@ -28,7 +32,8 @@ class CreateZahtjev extends React.Component {
             open: false,
             pocetakPosudbe: moment(new Date()).format('YYYY-MM-DD HH:mm'),
             krajPosudbe: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-            razlogPosudbe: ''
+            razlogPosudbe: '',
+            razlogPosudbeError: false
         };
     }
 
@@ -37,10 +42,35 @@ class CreateZahtjev extends React.Component {
     handleChange = name => ({ target: element }) => {
         this.setState({
             [name] : element.value
-        })
+        }, () => this.validateForm([name]));
     };
 
-    updateCache = () => {
+    validateForm = (formData) => {
+        let error = false;
+
+        formData.forEach(data => {
+            this.setState({[`${data}Error`]: this.state[data] === '' || this.state[data] === null });
+            if(this.state[data] === '' || this.state[data] === null){
+                error = true;
+            }
+        });
+
+        return !error;
+    };
+
+    updateCache = (cache,  {data : { CreateZahtjev }}) => {
+
+        console.log(CreateZahtjev);
+
+        const {uredaj} = cache.readQuery({query: AVAILABLE_UREDAJ_QUERY, variables: { stanjeId: 1 }});
+
+        cache.writeQuery({
+            query: AVAILABLE_UREDAJ_QUERY,
+            variables: { stanjeId: 1 },
+            data: {
+                uredaj: uredaj.filter(uredaj => uredaj.id !== CreateZahtjev.uredaj.id)
+            }
+        });
 
         this.props.enqueueSnackbar('Zahtjev je kreiran', { variant: 'success' });
 
@@ -89,14 +119,18 @@ class CreateZahtjev extends React.Component {
                                                 </MuiPickersUtilsProvider>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="razlogPosudbe">Razlog posudbe</InputLabel>
+                                                <Input
                                                     required
                                                     id="razlogPosudbe"
                                                     name="razlogPosudbe"
-                                                    label="Razlog posudbe"
+                                                    error={this.state.razlogPosudbeError}
                                                     fullWidth
                                                     onChange={this.handleChange('razlogPosudbe')}
                                                 />
+                                                    {this.state.razlogPosudbeError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                                </FormControl>
                                             </Grid>
                                         </Grid>
                                     </FormGroup>
@@ -114,16 +148,20 @@ class CreateZahtjev extends React.Component {
                                         variant="contained"
                                         style={{ marginLeft: '0px' }}
                                         onClick={() => {
-                                            this.props.enqueueSnackbar('Kreiranje zahtjeva je u tijeku', { variant: 'default' });
-                                            return createZahtjev({ variables: {
-                                                    input: {
-                                                        pocetakPosudbe: this.state.pocetakPosudbe,
-                                                        krajPosudbe: this.state.krajPosudbe,
-                                                        razlogPosudbe: this.state.razlogPosudbe,
-                                                        korisnikId: this.context.korisnikId,
-                                                        uredajId: this.props.data.id
+                                            if(this.validateForm(['razlogPosudbe'])) {
+                                                this.props.enqueueSnackbar('Kreiranje zahtjeva je u tijeku', {variant: 'default'});
+                                                return createZahtjev({
+                                                    variables: {
+                                                        input: {
+                                                            pocetakPosudbe: this.state.pocetakPosudbe,
+                                                            krajPosudbe: this.state.krajPosudbe,
+                                                            razlogPosudbe: this.state.razlogPosudbe,
+                                                            korisnikId: this.context.korisnikId,
+                                                            uredajId: this.props.data.id
+                                                        }
                                                     }
-                                                }})
+                                                })
+                                            }
                                         }}
                                     >
                                         Pošalji zahtjev

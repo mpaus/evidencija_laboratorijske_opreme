@@ -103,14 +103,56 @@ export const KATEGORIJA_QUERY = gql`
     }
 `;
 
-export const ZAHTJEV_QUERY = gql`
-    query ZahtjevQuery {
-        zahtjevPosudbe{
+export const STUDENT_ZAHTJEV_QUERY = gql`
+    query ZahtjevQuery($korisnikId: ID!) {
+        zahtjevPosudbe(korisnikId: $korisnikId){
         id
     pocetakPosudbe
     krajPosudbe
     napomenaProfesora
     razlogPosudbe
+    korisnikId
+    odobritelj{
+      id
+      email
+      ime
+      prezime
+      brojTelefona
+    }
+    korisnik{
+      id
+      email
+      ime
+      prezime
+      maticniBroj
+      brojTelefona
+    }
+    stanje{
+      id
+      nazivStanja
+    }
+    uredaj{
+      id
+      nazivUredaja
+      serijskiBroj
+      cijena
+      specifikacije
+      slikaUrl
+      napomena
+    }
+    }
+    }
+`;
+
+export const PROFESOR_ZAHTJEV_QUERY = gql`
+    query ZahtjevQuery($odobritelj: ID!) {
+        zahtjevPosudbe(odobritelj: $odobritelj){
+        id
+    pocetakPosudbe
+    krajPosudbe
+    napomenaProfesora
+    razlogPosudbe
+    korisnikId
     odobritelj{
       id
       email

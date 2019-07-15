@@ -4,6 +4,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 import Grid from '@material-ui/core/Grid';
 import {Mutation, Query} from 'react-apollo';
 import {AVAILABLE_UREDAJ_QUERY, KATEGORIJA_QUERY, UREDAJ_QUERY} from '../apollo/queries';
@@ -11,7 +12,6 @@ import {CREATE_UREDAJ, UPDATE_UREDAJ } from '../apollo/mutations';
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControl from "@material-ui/core/FormControl";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import TextField from "@material-ui/core/TextField";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,10 +21,12 @@ import Composer from "react-composer";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from "@material-ui/core/Typography";
 import { withSnackbar } from 'notistack';
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 class UredajInfo extends React.Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
+
         this.setState({
             open: nextProps.open,
             nazivUredaja: nextProps.uredajInfo && nextProps.uredajInfo.nazivUredaja,
@@ -47,6 +49,10 @@ class UredajInfo extends React.Component {
             cijena: null,
             napomena: '',
             specifikacije: '',
+            nazivUredajaError: false,
+            serijskiBrojError: false,
+            cijenaError: false,
+            specifikacijeError: false,
             slika: null,
             kategorijaId: null,
             addKategorijaDialogOpen: false
@@ -69,11 +75,24 @@ class UredajInfo extends React.Component {
     handleChange = name => ({ target: element }) => {
         this.setState({
             [name] : element.value
-        })
+        }, () => this.validateForm([name]));
     };
 
     handleError = (err) => {
         this.props.enqueueSnackbar(err.message.replace('GraphQL error:', '').trim(),{ variant: 'error'})
+    };
+
+    validateForm = (formData) => {
+        let error = false;
+
+        formData.forEach(data => {
+            this.setState({[`${data}Error`]: this.state[data] === '' || this.state[data] === null });
+            if(this.state[data] === '' || this.state[data] === null){
+                error = true;
+            }
+        });
+
+        return !error;
     };
 
     updateCache = (cache, { data: { CreateUredaj }}) => {
@@ -200,59 +219,77 @@ class UredajInfo extends React.Component {
                                             </IconButton>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="nazivUredaja">Naziv uređaja</InputLabel>
+                                                <Input
                                                     required
                                                     id="nazivUredaja"
                                                     name="nazivUredaja"
-                                                    label="Naziv uređaja"
+                                                    error={this.state.nazivUredajaError}
                                                     value={this.state.nazivUredaja || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('nazivUredaja')}
                                                 />
+                                                    {this.state.nazivUredajaError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="serijskiBroj">Serijski broj</InputLabel>
+                                                <Input
                                                     required
                                                     id="serijskiBroj"
                                                     name="serijskiBroj"
-                                                    label="Serijski broj"
+                                                    error={this.state.serijskiBrojError}
                                                     value={this.state.serijskiBroj || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('serijskiBroj')}
                                                 />
+                                                {this.state.serijskiBrojError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="specifikacije">Specifikacije</InputLabel>
+                                                <Input
                                                     required
                                                     id="specifikacije"
                                                     name="specifikacije"
-                                                    label="Specifikacije"
                                                     value={this.state.specifikacije || ''}
+                                                    error={this.state.specifikacijeError}
                                                     fullWidth
                                                     onChange={this.handleChange('specifikacije')}
                                                 />
+                                                    {this.state.specifikacijeError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="cijena">Cijena</InputLabel>
+                                                <Input
                                                     required
                                                     id="cijena"
                                                     name="cijena"
-                                                    label="Cijena"
                                                     value={this.state.cijena || ''}
+                                                    error={this.state.cijenaError}
                                                     fullWidth
                                                     onChange={this.handleChange('cijena')}
                                                 />
+                                                    {this.state.cijenaError && (<FormHelperText style={{ color: '#d8000c'}}>Ovo polje je obavezno</FormHelperText>)}
+                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField
+                                                <FormControl required fullWidth>
+                                                    <InputLabel htmlFor="napomena">Napomena</InputLabel>
+                                                <Input
                                                     required
                                                     id="napomena"
                                                     name="napomena"
-                                                    label="Napomena"
                                                     value={this.state.napomena || ''}
                                                     fullWidth
                                                     onChange={this.handleChange('napomena')}
                                                 />
+                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12} style={{ marginBottom: '20px' }}>
                                                 <div style={{ padding: '10px 0px' }}>
@@ -281,36 +318,54 @@ class UredajInfo extends React.Component {
                                     variant="contained"
                                     onClick={() => {
                                         if(this.props.uredajInfo) {
-                                            this.props.enqueueSnackbar('Ažuriranje uređaja je u tijeku', { variant: 'default' });
-                                            return updateUredaj({
-                                                variables: {
-                                                    input: {
-                                                        id: this.props.uredajInfo && this.props.uredajInfo.id,
-                                                        nazivUredaja: this.state.nazivUredaja,
-                                                        serijskiBroj: this.state.serijskiBroj,
-                                                        cijena: this.state.cijena,
-                                                        napomena: this.state.napomena,
-                                                        specifikacije: this.state.specifikacije,
-                                                        kategorijaId: this.state.kategorijaId,
-                                                    },
-                                                    file: this.state.slika
-                                                }
-                                            })
+                                            if(this.validateForm(
+                                                [
+                                                    'nazivUredaja',
+                                                    'serijskiBroj',
+                                                    'specifikacije',
+                                                    'cijena',
+                                                    'napomena',
+                                                ])) {
+                                                this.props.enqueueSnackbar('Ažuriranje uređaja je u tijeku', {variant: 'default'});
+                                                return updateUredaj({
+                                                    variables: {
+                                                        input: {
+                                                            id: this.props.uredajInfo && this.props.uredajInfo.id,
+                                                            nazivUredaja: this.state.nazivUredaja,
+                                                            serijskiBroj: this.state.serijskiBroj,
+                                                            cijena: this.state.cijena,
+                                                            napomena: this.state.napomena,
+                                                            specifikacije: this.state.specifikacije,
+                                                            kategorijaId: this.state.kategorijaId,
+                                                        },
+                                                        file: this.state.slika
+                                                    }
+                                                })
+                                            }
                                         } else {
-                                            this.props.enqueueSnackbar('Kreiranje uređaja je u tijeku', { variant: 'default' });
-                                            return createUredaj({
-                                                variables: {
-                                                    input: {
-                                                        nazivUredaja: this.state.nazivUredaja,
-                                                        serijskiBroj: this.state.serijskiBroj,
-                                                        cijena: this.state.cijena,
-                                                        napomena: this.state.napomena,
-                                                        specifikacije: this.state.specifikacije,
-                                                        kategorijaId: this.state.kategorijaId,
-                                                    },
-                                                    file: this.state.slika
-                                                }
-                                            })
+                                            if (this.validateForm(
+                                                [
+                                                    'nazivUredaja',
+                                                    'serijskiBroj',
+                                                    'specifikacije',
+                                                    'cijena',
+                                                    'napomena',
+                                                ])) {
+                                                this.props.enqueueSnackbar('Kreiranje uređaja je u tijeku', {variant: 'default'});
+                                                return createUredaj({
+                                                    variables: {
+                                                        input: {
+                                                            nazivUredaja: this.state.nazivUredaja,
+                                                            serijskiBroj: this.state.serijskiBroj,
+                                                            cijena: this.state.cijena,
+                                                            napomena: this.state.napomena,
+                                                            specifikacije: this.state.specifikacije,
+                                                            kategorijaId: this.state.kategorijaId,
+                                                        },
+                                                        file: this.state.slika
+                                                    }
+                                                })
+                                            }
                                         }
                                     }}
                                 >
