@@ -9,9 +9,9 @@ class Korisnik extends React.Component {
         return (
             <Card>
                 <div>
-                  <Grid container spacing={3}>
+                  <Grid container wrap="nowrap" spacing={3}>
                       <Grid item xs={5} style={{ display: 'flex' }}>
-                          <img src={this.props.data.slikaUrl} width={250} height={250} alt={`${this.props.data.ime} ${this.props.data.prezime}`}/>
+                          <img src={this.props.data.slikaUrl} style={{ width: '100%', height: '100%' }} width={250} height={250} alt={`${this.props.data.ime} ${this.props.data.prezime}`}/>
                       </Grid>
                     <Grid item xs={7} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', textAlign: 'left'}}>
                     <Typography>
