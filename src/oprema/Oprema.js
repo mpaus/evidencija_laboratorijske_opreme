@@ -67,7 +67,7 @@ export class Oprema extends Component {
                         <Tab value="sviUredaji" label="Svi uređaji" />
                     </Tabs>
                         {this.state.prikaz === 'sviUredaji' ?
-                            (<Query query={UREDAJ_QUERY}>
+                            (<Query query={UREDAJ_QUERY} notifyOnNetworkStatusChange>
                         {
                             ({loading, error, data}) => {
                                 if (loading) return <Typography style={{ padding: '5px' }}>Učitavanje...</Typography>;

@@ -10,6 +10,7 @@ import Composer from "react-composer";
 import AuthContext from '../context/authContext';
 import {Typography} from "@material-ui/core";
 import { withSnackbar } from 'notistack';
+import { withApollo } from 'react-apollo';
 
 class ZahtjevInfo extends React.Component {
 
@@ -37,6 +38,7 @@ class ZahtjevInfo extends React.Component {
             }
         });
 
+        this.props.client.clearStore();
     };
 
     updateCacheDecline = (cache, {data:{ DeclineZahtjev }}) => {
@@ -239,4 +241,4 @@ class ZahtjevInfo extends React.Component {
     }
 }
 
-export default withSnackbar(ZahtjevInfo);
+export default withApollo(withSnackbar(ZahtjevInfo));

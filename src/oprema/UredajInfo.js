@@ -323,8 +323,7 @@ class UredajInfo extends React.Component {
                                                     'nazivUredaja',
                                                     'serijskiBroj',
                                                     'specifikacije',
-                                                    'cijena',
-                                                    'napomena',
+                                                    'cijena'
                                                 ])) {
                                                 this.props.enqueueSnackbar('Ažuriranje uređaja je u tijeku', {variant: 'default'});
                                                 return updateUredaj({
@@ -348,8 +347,7 @@ class UredajInfo extends React.Component {
                                                     'nazivUredaja',
                                                     'serijskiBroj',
                                                     'specifikacije',
-                                                    'cijena',
-                                                    'napomena',
+                                                    'cijena'
                                                 ])) {
                                                 this.props.enqueueSnackbar('Kreiranje uređaja je u tijeku', {variant: 'default'});
                                                 return createUredaj({
