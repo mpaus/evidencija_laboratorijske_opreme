@@ -29,7 +29,7 @@
     "react-dropzone": "^10.1.4",
     "react-inspector": "^3.0.2",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "5.0.1",
     "recharts": "^1.5.0",
     "typescript": "^3.4.3"
   },
